@@ -22,11 +22,6 @@ PerchIOS is a native SwiftUI iPhone MVP for finding scenic public spots to sit a
 3. Run the `PerchIOS` target.
 4. Allow location access to see nearby filtering behave properly.
 
-## Notes
-- Deployment target is iOS 17.
-- `xcodebuild` could not be run from this environment because the machine currently points to Command Line Tools instead of a full Xcode developer directory.
-- The code was still validated from the CLI with JSON parsing, plist parsing, and static Swift source checks.
-
 ## Suggested first smoke test in Xcode
 - Launch app → Explore loads with map pins and bottom cards
 - Toggle filters and confirm list changes
