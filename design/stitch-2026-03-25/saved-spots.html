@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Saved - Perch Studio</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Fonts: Newsreader (Editorial) & Manrope (Functional) -->
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed-dim": "#efb9be",
+              "surface-container-low": "#f3f4f5",
+              "on-secondary-fixed": "#131e16",
+              "on-secondary-fixed-variant": "#3d4a40",
+              "on-primary-fixed": "#022110",
+              "on-tertiary": "#ffffff",
+              "on-background": "#191c1d",
+              "on-error": "#ffffff",
+              "on-primary-container": "#99baa1",
+              "outline": "#727972",
+              "surface": "#f8f9fa",
+              "surface-variant": "#e1e3e4",
+              "on-tertiary-container": "#daa5ab",
+              "primary-fixed-dim": "#adcfb4",
+              "error-container": "#ffdad6",
+              "on-tertiary-fixed-variant": "#633c41",
+              "secondary-fixed-dim": "#bccabd",
+              "on-primary-fixed-variant": "#2f4d39",
+              "surface-dim": "#d9dadb",
+              "on-surface": "#191c1d",
+              "outline-variant": "#c2c8c0",
+              "surface-container-highest": "#e1e3e4",
+              "primary": "#163422",
+              "surface-bright": "#f8f9fa",
+              "inverse-on-surface": "#f0f1f2",
+              "tertiary-container": "#613a3f",
+              "secondary-container": "#d8e6d9",
+              "primary-container": "#2d4b37",
+              "on-surface-variant": "#424843",
+              "primary-fixed": "#c8ebd0",
+              "surface-container-high": "#e7e8e9",
+              "on-tertiary-fixed": "#311217",
+              "on-primary": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-container": "#5b675d",
+              "surface-container": "#edeeef",
+              "secondary": "#556157",
+              "inverse-primary": "#adcfb4",
+              "secondary-fixed": "#d8e6d9",
+              "error": "#ba1a1a",
+              "on-error-container": "#93000a",
+              "inverse-surface": "#2e3132",
+              "surface-tint": "#466550",
+              "background": "#f8f9fa",
+              "tertiary": "#472429",
+              "tertiary-fixed": "#ffd9dc",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Newsreader", "serif"],
+              "body": ["Manrope", "sans-serif"],
+              "label": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container/30">
+<!-- TopAppBar Shell (Shared Component Mapping) -->
+<header class="fixed top-0 w-full z-50 bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl flex items-center justify-between px-6 py-4 w-full no-border bg-surface-container-low/60 shadow-sm shadow-emerald-900/5">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 duration-200 hover:bg-emerald-50/50 dark:hover:bg-emerald-900/20 transition-colors rounded-full p-2">
+<span class="material-symbols-outlined text-emerald-900 dark:text-emerald-50">menu</span>
+</button>
+<h1 class="font-serif italic text-emerald-950 dark:text-emerald-50 tracking-tighter font-serif font-medium tracking-tight text-2xl">Perch</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="active:scale-95 duration-200 hover:bg-emerald-50/50 dark:hover:bg-emerald-900/20 transition-colors rounded-full p-2">
+<span class="material-symbols-outlined text-emerald-900 dark:text-emerald-50">account_circle</span>
+</button>
+</div>
+</header>
+<main class="pt-28 pb-32 px-6 max-w-screen-md mx-auto min-h-screen">
+<!-- Header Section -->
+<header class="mb-12">
+<p class="font-label text-label-sm uppercase tracking-[0.2em] text-on-surface-variant opacity-60 mb-2">Your Collection</p>
+<h2 class="font-headline text-5xl md:text-6xl text-primary leading-tight tracking-tight">Saved Spaces</h2>
+<div class="mt-4 w-12 h-[1px] bg-primary/20"></div>
+</header>
+<!-- Saved List Content -->
+<div class="flex flex-col gap-14">
+<!-- Saved Item 1 -->
+<article class="group relative block cursor-pointer">
+<div class="overflow-hidden rounded-xl aspect-[4/5] md:aspect-[16/10] bg-surface-container shadow-2xl shadow-on-surface/5 transition-transform duration-700 ease-out group-hover:scale-[1.01]">
+<img alt="" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" data-alt="Modern minimalist concrete villa living room with large floor-to-ceiling windows overlooking a misty forest at dawn" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5B8mPxdHr4vofe9y6aO66SpGGTzaJMbSpYFKTsFKW5kt-w3p8K8GWlAtnzH-6m21S2cK6U7tTloU75bOWpo_ZiFPrjagCw-uTG4z8rHN-IN695rQhbS9y4ELYAN0I_Ri2hkwnuwVXTd9PFlHQ11hRWweWZPXzrgLN_LJyJepWt4uAQrxKzarxPxpoWEhQ-Om8DJjPwY2VKSdaFME5Z_dGlgEbFQQI_s4DKPSxTAGU2ig-5vrq5NLwt9509VNvI7wVsNjykf5GDKc"/>
+<!-- Overlays -->
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60"></div>
+<div class="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+<div class="glass-card p-5 rounded-lg border border-white/20 max-w-[80%]">
+<h3 class="font-headline text-2xl text-primary-fixed-dim leading-none mb-2">The Concrete Sanctuary</h3>
+<div class="flex items-center gap-3">
+<span class="font-label text-[10px] uppercase tracking-widest text-on-primary-fixed-variant bg-white/50 px-2 py-1 rounded">Architectural</span>
+<span class="font-label text-[10px] uppercase tracking-widest text-on-primary-fixed-variant bg-white/50 px-2 py-1 rounded">Brutalist</span>
+</div>
+</div>
+<button class="bg-white/90 backdrop-blur-md text-primary p-4 rounded-full shadow-lg active:scale-90 transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark_heart</span>
+</button>
+</div>
+</div>
+<div class="mt-6 flex justify-between items-start opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<p class="font-body text-sm text-on-surface-variant max-w-sm">A minimal retreat designed for deep focus and tectonic appreciation. Nestled in the High Sierras.</p>
+<span class="font-label text-xs uppercase tracking-tighter text-on-surface opacity-40">Saved 2 days ago</span>
+</div>
+</article>
+<!-- Saved Item 2 -->
+<article class="group relative block cursor-pointer">
+<div class="overflow-hidden rounded-xl aspect-[4/5] md:aspect-[16/10] bg-surface-container shadow-2xl shadow-on-surface/5 transition-transform duration-700 ease-out group-hover:scale-[1.01]">
+<img alt="" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" data-alt="Elegant luxury hotel bedroom with soft linen sheets and warm golden sunlight streaming through shear curtains" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvwITY8Xie5YmvJI81mXnEuROfZiyRi_qd6__J31csYf3aTWftZcpumiVGpEU5_ovaq4D1GIToaZjaUSRMl6gaf6ZVlzaK_vsjRXhEf46uaQ6elK0nOnL20xi9nJVBQNmowKlKWHWiH1DNXR845_kpNKXWFP2brMzjm2R_9UnUq3jyh11feyiqgtCuKm8rPkvo3xq92kED_jvxYugLatZ7YRyhmI9WgDMSDpNv7p-0IUKPEr5pn0TsTuA8_wy8N9X1PifmuQDWQSE"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60"></div>
+<div class="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+<div class="glass-card p-5 rounded-lg border border-white/20 max-w-[80%]">
+<h3 class="font-headline text-2xl text-primary-fixed-dim leading-none mb-2">Linen &amp; Light Loft</h3>
+<div class="flex items-center gap-3">
+<span class="font-label text-[10px] uppercase tracking-widest text-on-primary-fixed-variant bg-white/50 px-2 py-1 rounded">Ethereal</span>
+<span class="font-label text-[10px] uppercase tracking-widest text-on-primary-fixed-variant bg-white/50 px-2 py-1 rounded">Morning Glow</span>
+</div>
+</div>
+<button class="bg-white/90 backdrop-blur-md text-primary p-4 rounded-full shadow-lg active:scale-90 transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark_heart</span>
+</button>
+</div>
+</div>
+<div class="mt-6 flex justify-between items-start opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<p class="font-body text-sm text-on-surface-variant max-w-sm">Sun-drenched interiors featuring heritage oak floors and hand-woven linens. Located in Copenhagen.</p>
+<span class="font-label text-xs uppercase tracking-tighter text-on-surface opacity-40">Saved 1 week ago</span>
+</div>
+</article>
+<!-- Saved Item 3 -->
+<article class="group relative block cursor-pointer">
+<div class="overflow-hidden rounded-xl aspect-[4/5] md:aspect-[16/10] bg-surface-container shadow-2xl shadow-on-surface/5 transition-transform duration-700 ease-out group-hover:scale-[1.01]">
+<img alt="" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" data-alt="Quiet wood cabin interior with a warm fireplace and artisanal ceramic cups on a rustic table" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfmM1loOES74nBehv7Av6OtVz5KY46m5e48mpQMWM4D9X1mIi8lcnozYdkG5gUI3nlirde4-DL_4LhNt1BiQW9rqXOxTO2RNSbGqBoacAsI5axh2PabvkAx8IG7AhUJEuumLhkC1A44lkHcyIBG3B-VHXeZrfj13bnLMYP_RGbEzfTutq11n8GKKUqNPg1UgIvxO9W6YvYW69i7o30evoIdLYC2MnY9ZOPdvGEOBjI6bkiZ-K80r4GKDkfcib7LT-TD5SDu6ZIvHw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60"></div>
+<div class="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+<div class="glass-card p-5 rounded-lg border border-white/20 max-w-[80%]">
+<h3 class="font-headline text-2xl text-primary-fixed-dim leading-none mb-2">Oak &amp; Ember Cabin</h3>
+<div class="flex items-center gap-3">
+<span class="font-label text-[10px] uppercase tracking-widest text-on-primary-fixed-variant bg-white/50 px-2 py-1 rounded">Hygge</span>
+<span class="font-label text-[10px] uppercase tracking-widest text-on-primary-fixed-variant bg-white/50 px-2 py-1 rounded">Winter</span>
+</div>
+</div>
+<button class="bg-white/90 backdrop-blur-md text-primary p-4 rounded-full shadow-lg active:scale-90 transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark_heart</span>
+</button>
+</div>
+</div>
+<div class="mt-6 flex justify-between items-start opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<p class="font-body text-sm text-on-surface-variant max-w-sm">A tactile wooden escape designed for creative sabbaticals and quiet contemplation.</p>
+<span class="font-label text-xs uppercase tracking-tighter text-on-surface opacity-40">Saved 3 weeks ago</span>
+</div>
+</article>
+</div>
+<!-- Empty State Logic Buffer (Invisible but helps visual balance) -->
+<div class="py-24 text-center">
+<p class="font-headline italic text-2xl text-primary/30 tracking-tight">Curate your next chapter</p>
+</div>
+</main>
+<!-- BottomNavBar Shell (Shared Component Mapping) -->
+<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] rounded-[2rem] overflow-hidden bg-white/60 dark:bg-zinc-950/60 backdrop-blur-2xl shadow-[0_12px_40px_rgba(25,28,29,0.04)] z-50 flex justify-around items-center px-4 h-20 no-line gap-x-2">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-zinc-500 dark:text-zinc-400 px-4 py-2 hover:text-emerald-700 dark:hover:text-emerald-300 active:scale-90 transition-all cubic-bezier(0.34,1.56,0.64,1)" href="#">
+<span class="material-symbols-outlined">home_max</span>
+<span class="font-sans uppercase tracking-[0.05em] text-[10px] font-bold mt-1">Home</span>
+</a>
+<!-- Explore -->
+<a class="flex flex-col items-center justify-center text-zinc-500 dark:text-zinc-400 px-4 py-2 hover:text-emerald-700 dark:hover:text-emerald-300 active:scale-90 transition-all cubic-bezier(0.34,1.56,0.64,1)" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-sans uppercase tracking-[0.05em] text-[10px] font-bold mt-1">Explore</span>
+</a>
+<!-- Saved (ACTIVE) -->
+<a class="flex flex-col items-center justify-center bg-emerald-900 dark:bg-emerald-400 text-white dark:text-zinc-950 rounded-full px-5 py-2 scale-105 active:scale-90 transition-all cubic-bezier(0.34,1.56,0.64,1)" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark_heart</span>
+<span class="font-sans uppercase tracking-[0.05em] text-[10px] font-bold mt-1">Saved</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-zinc-500 dark:text-zinc-400 px-4 py-2 hover:text-emerald-700 dark:hover:text-emerald-300 active:scale-90 transition-all cubic-bezier(0.34,1.56,0.64,1)" href="#">
+<span class="material-symbols-outlined">person_2</span>
+<span class="font-sans uppercase tracking-[0.05em] text-[10px] font-bold mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

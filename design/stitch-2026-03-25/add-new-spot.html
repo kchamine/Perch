@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed-dim": "#efb9be",
+              "surface-container-low": "#f3f4f5",
+              "on-secondary-fixed": "#131e16",
+              "on-secondary-fixed-variant": "#3d4a40",
+              "on-primary-fixed": "#022110",
+              "on-tertiary": "#ffffff",
+              "on-background": "#191c1d",
+              "on-error": "#ffffff",
+              "on-primary-container": "#99baa1",
+              "outline": "#727972",
+              "surface": "#f8f9fa",
+              "surface-variant": "#e1e3e4",
+              "on-tertiary-container": "#daa5ab",
+              "primary-fixed-dim": "#adcfb4",
+              "error-container": "#ffdad6",
+              "on-tertiary-fixed-variant": "#633c41",
+              "secondary-fixed-dim": "#bccabd",
+              "on-primary-fixed-variant": "#2f4d39",
+              "surface-dim": "#d9dadb",
+              "on-surface": "#191c1d",
+              "outline-variant": "#c2c8c0",
+              "surface-container-highest": "#e1e3e4",
+              "primary": "#163422",
+              "surface-bright": "#f8f9fa",
+              "inverse-on-surface": "#f0f1f2",
+              "tertiary-container": "#613a3f",
+              "secondary-container": "#d8e6d9",
+              "primary-container": "#2d4b37",
+              "on-surface-variant": "#424843",
+              "primary-fixed": "#c8ebd0",
+              "surface-container-high": "#e7e8e9",
+              "on-tertiary-fixed": "#311217",
+              "on-primary": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-container": "#5b675d",
+              "surface-container": "#edeeef",
+              "secondary": "#556157",
+              "inverse-primary": "#adcfb4",
+              "secondary-fixed": "#d8e6d9",
+              "error": "#ba1a1a",
+              "on-error-container": "#93000a",
+              "inverse-surface": "#2e3132",
+              "surface-tint": "#466550",
+              "background": "#f8f9fa",
+              "tertiary": "#472429",
+              "tertiary-fixed": "#ffd9dc",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Newsreader"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .font-serif { font-family: 'Newsreader', serif; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-32">
+<!-- Top Navigation Anchor (Manual suppression of search/account icons for focus task) -->
+<header class="bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl text-emerald-900 dark:text-emerald-50 fixed top-0 w-full z-50 no-border bg-surface-container-low/60 shadow-sm shadow-emerald-900/5">
+<div class="flex items-center justify-between px-6 py-4 w-full">
+<button class="material-symbols-outlined active:scale-95 duration-200 p-2 rounded-full hover:bg-emerald-50/50">close</button>
+<h1 class="font-serif italic text-emerald-950 dark:text-emerald-50 tracking-tighter text-2xl">Perch</h1>
+<div class="w-10"></div> <!-- Spacer for balance -->
+</div>
+</header>
+<main class="pt-24 px-6 max-w-2xl mx-auto space-y-12">
+<!-- Header Section -->
+<section class="space-y-2">
+<h2 class="font-headline text-4xl font-medium tracking-tight text-primary leading-tight">Add a New Spot</h2>
+<p class="font-body text-secondary text-sm tracking-wide">SHARING SECRETS WITH THE COMMUNITY</p>
+</section>
+<!-- Image Upload - Glass Studio Style -->
+<section class="relative group">
+<div class="w-full h-72 rounded-xl overflow-hidden glass-panel border border-white/40 flex flex-col items-center justify-center space-y-4 cursor-pointer hover:bg-white/80 transition-all duration-500 shadow-[0_12px_40px_rgba(25,28,29,0.04)]">
+<div class="absolute inset-0 opacity-10 grayscale group-hover:grayscale-0 transition-all duration-700 bg-cover bg-center" data-alt="soft aesthetic background of a sun-drenched minimalist interior with neutral tones and soft shadows" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCuLHQiDhUipzSSlp3_sBFuQ4KPIqWZgGO9aur4lhQqwNwr8L-S2OSwjr82KNsZQ-ITrEqIXGdgMtO29IL7Djf95KTRuLJ_kJhAjwYK2o7QpySclZ4J_8bQPnr_89XjVl83WNnfuSRmZ3YG4cB0bd7Jcb6fZN3m8qShOvlwda4lbXc_2X4Kd3uAvKCgAOklZcs-Rd8z_4YKyfzmWq69TSNAKaijz713mrGqDosopLCDbX72uH3piZPZAJpIzNg5jEghEEAaZxSzrH4')"></div>
+<div class="relative z-10 flex flex-col items-center">
+<span class="material-symbols-outlined text-4xl text-primary mb-2" data-weight="fill" style="font-variation-settings: 'FILL' 1;">add_a_photo</span>
+<p class="font-headline text-xl text-primary">Capture the Vibe</p>
+<p class="text-xs font-label uppercase tracking-widest text-secondary-fixed-dim mt-1">Upload high-res photos</p>
+</div>
+</div>
+</section>
+<!-- Form Elements -->
+<form class="space-y-10">
+<!-- Name Input (Minimal Modern) -->
+<div class="space-y-4">
+<label class="font-label text-[10px] font-bold uppercase tracking-[0.15em] text-secondary/60 ml-1">Spot Name</label>
+<input class="w-full bg-transparent border-b-2 border-outline-variant/30 focus:border-primary transition-colors duration-300 py-3 text-2xl font-headline outline-none placeholder:text-surface-dim" placeholder="The Hidden Atrium..." type="text"/>
+</div>
+<!-- Spot Type Selection (Large Friendly Icons) -->
+<div class="space-y-4">
+<label class="font-label text-[10px] font-bold uppercase tracking-[0.15em] text-secondary/60 ml-1">Category</label>
+<div class="grid grid-cols-4 gap-4">
+<div class="flex flex-col items-center justify-center p-4 rounded-xl bg-surface-container-lowest border border-transparent hover:border-primary/20 transition-all cursor-pointer group active:scale-95 shadow-sm">
+<span class="material-symbols-outlined text-3xl text-secondary group-hover:text-primary transition-colors mb-2">local_cafe</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-tighter">Cafe</span>
+</div>
+<div class="flex flex-col items-center justify-center p-4 rounded-xl bg-primary text-white border border-transparent transition-all cursor-pointer group active:scale-95 shadow-lg shadow-primary/10">
+<span class="material-symbols-outlined text-3xl mb-2" style="font-variation-settings: 'FILL' 1;">park</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-tighter">Nature</span>
+</div>
+<div class="flex flex-col items-center justify-center p-4 rounded-xl bg-surface-container-lowest border border-transparent hover:border-primary/20 transition-all cursor-pointer group active:scale-95 shadow-sm">
+<span class="material-symbols-outlined text-3xl text-secondary group-hover:text-primary transition-colors mb-2">menu_book</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-tighter">Study</span>
+</div>
+<div class="flex flex-col items-center justify-center p-4 rounded-xl bg-surface-container-lowest border border-transparent hover:border-primary/20 transition-all cursor-pointer group active:scale-95 shadow-sm">
+<span class="material-symbols-outlined text-3xl text-secondary group-hover:text-primary transition-colors mb-2">hotel_class</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-tighter">Views</span>
+</div>
+</div>
+</div>
+<!-- Vibe Selection (Bento Style) -->
+<div class="space-y-4">
+<label class="font-label text-[10px] font-bold uppercase tracking-[0.15em] text-secondary/60 ml-1">The Vibe</label>
+<div class="flex flex-wrap gap-2">
+<button class="px-5 py-2.5 rounded-full glass-panel border border-outline-variant/20 text-sm font-medium hover:bg-primary hover:text-white transition-all" type="button">Quiet</button>
+<button class="px-5 py-2.5 rounded-full bg-secondary-container text-on-secondary-container text-sm font-medium transition-all" type="button">Natural Light</button>
+<button class="px-5 py-2.5 rounded-full glass-panel border border-outline-variant/20 text-sm font-medium hover:bg-primary hover:text-white transition-all" type="button">Minimalist</button>
+<button class="px-5 py-2.5 rounded-full glass-panel border border-outline-variant/20 text-sm font-medium hover:bg-primary hover:text-white transition-all" type="button">Rustic</button>
+<button class="px-5 py-2.5 rounded-full glass-panel border border-outline-variant/20 text-sm font-medium hover:bg-primary hover:text-white transition-all" type="button">Urban</button>
+</div>
+</div>
+<!-- Location & Privacy Glass Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="p-6 rounded-lg glass-panel border border-white/50 space-y-3">
+<span class="material-symbols-outlined text-primary">location_on</span>
+<h3 class="font-headline text-lg font-medium">Automatic Location</h3>
+<p class="text-xs text-secondary-fixed-variant leading-relaxed">We'll use your current GPS to tag this exact perch coordinates.</p>
+</div>
+<div class="p-6 rounded-lg bg-surface-container border border-outline-variant/10 space-y-3">
+<span class="material-symbols-outlined text-secondary">visibility_off</span>
+<h3 class="font-headline text-lg font-medium">Keep it Private?</h3>
+<p class="text-xs text-secondary-fixed-variant leading-relaxed">Toggle this if you want to keep this spot in your personal archive only.</p>
+</div>
+</div>
+<!-- Publish Button Anchor -->
+<div class="pt-8">
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-white py-6 rounded-full font-label font-bold text-sm tracking-[0.2em] uppercase shadow-xl shadow-primary/20 active:scale-[0.98] transition-all flex items-center justify-center gap-3" type="submit">
+                    Publish Spot
+                    <span class="material-symbols-outlined text-xl">send</span>
+</button>
+<p class="text-center mt-6 font-label text-[9px] uppercase tracking-[0.2em] text-secondary/40">By publishing, you agree to our Community Studio Guidelines</p>
+</div>
+</form>
+</main>
+<!-- Bottom Navigation Shell - Suppressed for task focus (Back to Home implied) -->
+<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] rounded-[2rem] overflow-hidden bg-white/60 dark:bg-zinc-950/60 backdrop-blur-2xl z-50 flex justify-around items-center px-4 h-20 shadow-[0_12px_40px_rgba(25,28,29,0.04)]">
+<a class="flex flex-col items-center justify-center text-zinc-500 dark:text-zinc-400 px-4 py-2 hover:text-emerald-700 active:scale-90 transition-all" href="#">
+<span class="material-symbols-outlined">home_max</span>
+<span class="font-sans uppercase tracking-[0.05em] text-[10px] font-bold">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-zinc-500 dark:text-zinc-400 px-4 py-2 hover:text-emerald-700 active:scale-90 transition-all" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-sans uppercase tracking-[0.05em] text-[10px] font-bold">Explore</span>
+</a>
+<div class="flex flex-col items-center justify-center bg-emerald-900 dark:bg-emerald-400 text-white dark:text-zinc-950 rounded-full px-5 py-2 scale-105 active:scale-90 transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+<span class="font-sans uppercase tracking-[0.05em] text-[10px] font-bold">Post</span>
+</div>
+<a class="flex flex-col items-center justify-center text-zinc-500 dark:text-zinc-400 px-4 py-2 hover:text-emerald-700 active:scale-90 transition-all" href="#">
+<span class="material-symbols-outlined">person_2</span>
+<span class="font-sans uppercase tracking-[0.05em] text-[10px] font-bold">Profile</span>
+</a>
+</nav>
+</body></html>

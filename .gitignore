@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+
+# Xcode
+DerivedData/
+build/
+*.xcuserstate
+xcuserdata/
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
+
+# Swift Package Manager
+.swiftpm/
+.build/
+
+# CocoaPods / Carthage
+Pods/
+Carthage/Build/
+
+# Environment / local config
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log

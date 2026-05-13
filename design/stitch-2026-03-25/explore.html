@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Explore Perch - Modern Studio</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed-dim": "#efb9be",
+              "surface-container-low": "#f3f4f5",
+              "on-secondary-fixed": "#131e16",
+              "on-secondary-fixed-variant": "#3d4a40",
+              "on-primary-fixed": "#022110",
+              "on-tertiary": "#ffffff",
+              "on-background": "#191c1d",
+              "on-error": "#ffffff",
+              "on-primary-container": "#99baa1",
+              "outline": "#727972",
+              "surface": "#f8f9fa",
+              "surface-variant": "#e1e3e4",
+              "on-tertiary-container": "#daa5ab",
+              "primary-fixed-dim": "#adcfb4",
+              "error-container": "#ffdad6",
+              "on-tertiary-fixed-variant": "#633c41",
+              "secondary-fixed-dim": "#bccabd",
+              "on-primary-fixed-variant": "#2f4d39",
+              "surface-dim": "#d9dadb",
+              "on-surface": "#191c1d",
+              "outline-variant": "#c2c8c0",
+              "surface-container-highest": "#e1e3e4",
+              "primary": "#163422",
+              "surface-bright": "#f8f9fa",
+              "inverse-on-surface": "#f0f1f2",
+              "tertiary-container": "#613a3f",
+              "secondary-container": "#d8e6d9",
+              "primary-container": "#2d4b37",
+              "on-surface-variant": "#424843",
+              "primary-fixed": "#c8ebd0",
+              "surface-container-high": "#e7e8e9",
+              "on-tertiary-fixed": "#311217",
+              "on-primary": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-container": "#5b675d",
+              "surface-container": "#edeeef",
+              "secondary": "#556157",
+              "inverse-primary": "#adcfb4",
+              "secondary-fixed": "#d8e6d9",
+              "error": "#ba1a1a",
+              "on-error-container": "#93000a",
+              "inverse-surface": "#2e3132",
+              "surface-tint": "#466550",
+              "background": "#f8f9fa",
+              "tertiary": "#472429",
+              "tertiary-fixed": "#ffd9dc",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Newsreader", "serif"],
+              "body": ["Manrope", "sans-serif"],
+              "label": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+    }
+.glass-panel {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px)
+    }
+.map-bg {
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuB2IwioI6xPtCMhgHu3Ao1Bl65yl7kHssZtgdT5st6DbhgcF4Y4w8qDyFQBsYjratx67H1l2XKwTBwNvdS7-0VqY2NEJI5lLlyVJXMwYWk-zT5P6GceYO75YBHJsLNVunxZ092XIjsJAWg0xknZsFS212aWuDeGLs6wdNrzmi3sNCxhRPV5F9Ee6yjAP4m4kRjTonE5huwmgetOpG8U1kzO46X_G8DSRpXucQuSF1mpq-O-ARtmCAtw8iOvx-gpD6ze4Aomw5KXYAc);
+    background-size: cover;
+    background-position: center
+    }
+.no-scrollbar::-webkit-scrollbar {
+    display: none
+    }</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface antialiased overflow-hidden">
+<!-- Full Screen Map Canvas -->
+<div class="fixed inset-0 z-0 map-bg" data-alt="Stylized minimalist city map with muted earth tones and soft green parks in a vector aesthetic" data-location="London" style="">
+<!-- Interactive Pins Overlay (Simulated) -->
+<div class="absolute top-[35%] left-[45%] group cursor-pointer">
+<div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white shadow-xl scale-110 border-4 border-white/30 active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">park</span>
+</div>
+<div class="absolute -bottom-8 left-1/2 -translate-x-1/2 glass-panel px-3 py-1 rounded-full whitespace-nowrap shadow-sm">
+<p class="text-[10px] font-bold tracking-widest uppercase text-primary">Primrose Hill</p>
+</div>
+</div>
+<div class="absolute top-[55%] left-[65%] group cursor-pointer opacity-70">
+<div class="w-8 h-8 bg-surface-container-lowest rounded-full flex items-center justify-center text-primary shadow-lg border border-outline-variant/20 hover:scale-110 transition-transform duration-200">
+<span class="material-symbols-outlined text-[16px]">coffee</span>
+</div>
+</div>
+<div class="absolute top-[20%] left-[25%] group cursor-pointer opacity-70">
+<div class="w-8 h-8 bg-surface-container-lowest rounded-full flex items-center justify-center text-primary shadow-lg border border-outline-variant/20 hover:scale-110 transition-transform duration-200">
+<span class="material-symbols-outlined text-[16px]">museum</span>
+</div>
+</div>
+</div>
+<!-- Top Navigation (Derived from Shared Component: TopAppBar) -->
+<header class="fixed top-0 w-full z-50 bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl flex items-center justify-between px-6 py-4 w-full shadow-sm shadow-emerald-900/5">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-emerald-50/50 dark:hover:bg-emerald-900/20 transition-colors active:scale-95 duration-200 text-emerald-900 dark:text-emerald-50">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-serif italic text-emerald-950 dark:text-emerald-50 tracking-tighter font-serif font-medium tracking-tight text-2xl">Perch</h1>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-emerald-50/50 dark:hover:bg-emerald-900/20 transition-colors active:scale-95 duration-200 text-emerald-900 dark:text-emerald-50">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</header>
+<!-- Search Overlay -->
+<div class="fixed top-24 left-1/2 -translate-x-1/2 w-[92%] max-w-lg z-40">
+<div class="glass-panel rounded-full p-2 flex items-center gap-3 shadow-[0_12px_40px_rgba(25,28,29,0.06)] border border-white/40">
+<div class="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="flex-1 bg-transparent border-none focus:ring-0 placeholder:text-zinc-400 text-on-surface font-body font-medium" placeholder="Find a quiet spot..." type="text"/>
+<button class="p-2 text-zinc-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">tune</span>
+</button>
+</div>
+<!-- Filter Pills -->
+<div class="mt-4 flex gap-2 overflow-x-auto no-scrollbar pb-2 px-1">
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-full text-xs font-bold uppercase tracking-wider shadow-lg shadow-primary/10 transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm">nature_people</span> Parks
+            </button>
+<button class="flex items-center gap-2 px-4 py-2 glass-panel text-on-surface-variant rounded-full text-xs font-bold uppercase tracking-wider border border-white/20 transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm">coffee</span> Cafes
+            </button>
+<button class="flex items-center gap-2 px-4 py-2 glass-panel text-on-surface-variant rounded-full text-xs font-bold uppercase tracking-wider border border-white/20 transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm">apartment</span> Rooftops
+            </button>
+<button class="flex items-center gap-2 px-4 py-2 glass-panel text-on-surface-variant rounded-full text-xs font-bold uppercase tracking-wider border border-white/20 transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm">auto_stories</span> Libraries
+            </button>
+</div>
+</div>
+<!-- Main Content Area (Spot Details Card) -->
+<main class="fixed bottom-32 left-1/2 -translate-x-1/2 w-[92%] max-w-xl z-30 pointer-events-none">
+<div class="pointer-events-auto glass-panel rounded-lg p-3 shadow-[0_24px_48px_-12px_rgba(25,28,29,0.1)] border border-white/50 flex flex-col sm:flex-row gap-5">
+<!-- Featured Image -->
+<div class="relative h-48 sm:h-auto sm:w-48 flex-shrink-0 overflow-hidden rounded-lg">
+<img class="w-full h-full object-cover" data-alt="Modern minimalist aesthetic of a quiet park bench overlooking a misty city skyline at dawn with soft morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvAbIZm0sJSdhFY9GWOCg-znGS4Vck8-or3-BwUd7rvWQ0ZoVYlaumCUxvMQLIQummUHu5rBCWz9tyuVQHhXJB7S2auNcaRbRp8tpv9si9p1yCc2U61asbVzxp55GlFbIg_jlZLQcFme2C5Mhb1xyBPO89DHeFHZA1I5oR9dbxO7Pb4r-J_TzAsavXYxHRhBS2MGTUabxWdTDzgXThRH85Jsglz4flglY8TdHFT33UJFEPDuBwf_VCK3xkV30bYz58Tnqnenj3eSo"/>
+<div class="absolute top-3 right-3">
+<button class="w-8 h-8 rounded-full bg-black/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-black/40 transition-colors">
+<span class="material-symbols-outlined text-[18px]">bookmark_heart</span>
+</button>
+</div>
+</div>
+<!-- Details Content -->
+<div class="flex-1 flex flex-col justify-center pr-2 py-2">
+<div class="flex items-center gap-2 mb-2">
+<span class="label-sm bg-primary/10 text-primary px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-widest">Featured Perch</span>
+<div class="flex items-center text-amber-500">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-[11px] font-bold ml-1 text-on-surface">4.9</span>
+</div>
+</div>
+<h2 class="font-headline text-2xl font-medium tracking-tight text-primary mb-1 leading-tight">Skyline Nook</h2>
+<p class="text-zinc-500 text-sm mb-4 line-clamp-2">A hidden rooftop terrace with bespoke timber seating and a panoramic view of the river. Perfect for sunset reading.</p>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex -space-x-2">
+<div class="w-7 h-7 rounded-full border-2 border-white overflow-hidden bg-zinc-200">
+<img class="w-full h-full object-cover" data-alt="portrait of a young designer in a studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGB6oUG_KbvHu-JwT7Cru35oSusGo0cdXWTSMhnInjxTbAMi2ua3fR45sWmEZGwd-9vsXEI6YsfquQmy-_kQ9NJxvFjGPB45mflOUK4nY_wIwwlXGDnam_bKTH_SMelO4nRubi0TaF_GP44CsAtI-BrSAIq4b_Ib8UMT_0pkapltIHaFpFkfyVCobsRi34AhsyUZ5Gp0XWML03JUYtuPOWCMOq9glnImFXBnN5joaoklht1V1xXzYYGxIxS9T-jXMwT0NFAfEHsJA"/>
+</div>
+<div class="w-7 h-7 rounded-full border-2 border-white overflow-hidden bg-zinc-200">
+<img class="w-full h-full object-cover" data-alt="portrait of a creative professional outdoors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDD2OmbhZyoKUdSpa__Dg3e8LAzHPwgFzAWrxFbyY5RN2VP9d-WI3S6BB2JKm-WBeDqoPxSONA8SpST82y8Xi5Pchc4aIF_Rla72jxYDXOnaaIWcm0_vit55rlXxQUK9GRyjQ4YLqsWeC3MszHLQyvObANKHK6bKV92c68dASNVA6jg1YGBkW-TYLxePtjtSbPb_3yGx8d9ReHK7EpnSmDYDXNYoxkifXbZLkyynJUbL_f76o8nPoBdMS9udDk9zKTzcAdefK1X1T8"/>
+</div>
+<div class="w-7 h-7 rounded-full border-2 border-white bg-surface-container flex items-center justify-center">
+<span class="text-[8px] font-bold">+12</span>
+</div>
+</div>
+<button class="bg-gradient-to-br from-primary to-primary-container text-white px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest shadow-lg shadow-primary/20 active:scale-95 transition-all">
+                        Get Directions
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Shell (Derived from Shared Component: BottomNavBar) -->
+<nav class="fixed bottom-6 left-0 right-0 z-50 flex justify-around items-center px-4 h-20">
+<div class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md rounded-[2rem] overflow-hidden bg-white/60 dark:bg-zinc-950/60 backdrop-blur-2xl shadow-[0_12px_40px_rgba(25,28,29,0.04)] flex justify-around items-center px-4 h-20 gap-x-2">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-zinc-500 dark:text-zinc-400 px-4 py-2 hover:text-emerald-700 dark:hover:text-emerald-300 active:scale-90 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="home_max">home_max</span>
+<span class="font-sans uppercase tracking-[0.05em] text-[10px] font-bold">Home</span>
+</a>
+<!-- Explore (Active) -->
+<a class="flex flex-col items-center justify-center bg-emerald-900 dark:bg-emerald-400 text-white dark:text-zinc-950 rounded-full px-5 py-2 scale-105 active:scale-90 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="search" style="font-variation-settings: 'FILL' 1;">search</span>
+<span class="font-sans uppercase tracking-[0.05em] text-[10px] font-bold">Explore</span>
+</a>
+<!-- Saved -->
+<a class="flex flex-col items-center justify-center text-zinc-500 dark:text-zinc-400 px-4 py-2 hover:text-emerald-700 dark:hover:text-emerald-300 active:scale-90 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="bookmark_heart">bookmark_heart</span>
+<span class="font-sans uppercase tracking-[0.05em] text-[10px] font-bold">Saved</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-zinc-500 dark:text-zinc-400 px-4 py-2 hover:text-emerald-700 dark:hover:text-emerald-300 active:scale-90 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="person_2">person_2</span>
+<span class="font-sans uppercase tracking-[0.05em] text-[10px] font-bold">Profile</span>
+</a>
+</div>
+</nav>
+<!-- Floating UI: Refresh Map Button -->
+<div class="fixed bottom-56 left-1/2 -translate-x-1/2 z-20">
+<button class="glass-panel text-primary px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-widest shadow-md border border-white/40 flex items-center gap-2 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">refresh</span>
+            Refresh this area
+        </button>
+</div>
+<!-- Floating UI: Location Anchor -->
+<div class="fixed right-6 bottom-56 z-20">
+<button class="w-12 h-12 glass-panel rounded-full text-primary flex items-center justify-center shadow-lg border border-white/40 active:scale-95 transition-all">
+<span class="material-symbols-outlined">my_location</span>
+</button>
+</div>
+</body></html>

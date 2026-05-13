@@ -1,0 +1,450 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 60;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A00100010000000000000001 /* PerchIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000001 /* PerchIOSApp.swift */; };
+		A00100010000000000000002 /* Spot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000002 /* Spot.swift */; };
+		A00100010000000000000003 /* SpotEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000003 /* SpotEnums.swift */; };
+		A00100010000000000000004 /* SpotFilterState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000004 /* SpotFilterState.swift */; };
+		A00100010000000000000005 /* SpotRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000005 /* SpotRepository.swift */; };
+		A00100010000000000000006 /* LocalSpotRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000006 /* LocalSpotRepository.swift */; };
+		A00100010000000000000007 /* FavoritesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000007 /* FavoritesStore.swift */; };
+		A00100010000000000000008 /* SpotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000008 /* SpotStore.swift */; };
+		A00100010000000000000009 /* ImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000009 /* ImageStore.swift */; };
+		A0010001000000000000000A /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011001000000000000000A /* LocationManager.swift */; };
+		A0010001000000000000000B /* NavigationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011001000000000000000B /* NavigationService.swift */; };
+		A0010001000000000000000C /* ExploreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011001000000000000000C /* ExploreView.swift */; };
+		A0010001000000000000000D /* FilterSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011001000000000000000D /* FilterSheetView.swift */; };
+		A0010001000000000000000E /* SpotCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011001000000000000000E /* SpotCardView.swift */; };
+		A0010001000000000000000F /* SpotDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011001000000000000000F /* SpotDetailView.swift */; };
+		A00100010000000000000010 /* AttributeTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000010 /* AttributeTagView.swift */; };
+		A00100010000000000000011 /* SeedOrUserPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000011 /* SeedOrUserPhotoView.swift */; };
+		A00100010000000000000012 /* SavedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000012 /* SavedView.swift */; };
+		A00100010000000000000013 /* AddSpotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000013 /* AddSpotView.swift */; };
+		A00100010000000000000014 /* LocationPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000014 /* LocationPickerView.swift */; };
+		A00100010000000000000015 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000015 /* Assets.xcassets */; };
+		A00100010000000000000016 /* SeededSpots.json in Resources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000016 /* SeededSpots.json */; };
+		A00100010000000000000019 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000019 /* AppState.swift */; };
+		A0010001000000000000001A /* PhotoCropperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011001000000000000001A /* PhotoCropperView.swift */; };
+		A0010001000000000000001B /* PerchTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011001000000000000001B /* PerchTheme.swift */; };
+		A0010001000000000000001C /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011001000000000000001C /* UserProfile.swift */; };
+		A0010001000000000000001D /* SpotReview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011001000000000000001D /* SpotReview.swift */; };
+		A0010001000000000000001E /* ProfileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011001000000000000001E /* ProfileStore.swift */; };
+		A0010001000000000000001F /* ReviewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011001000000000000001F /* ReviewStore.swift */; };
+		A00100010000000000000020 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000020 /* ProfileView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A00110010000000000000001 /* PerchIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerchIOSApp.swift; sourceTree = "<group>"; };
+		A00110010000000000000002 /* Spot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spot.swift; sourceTree = "<group>"; };
+		A00110010000000000000003 /* SpotEnums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotEnums.swift; sourceTree = "<group>"; };
+		A00110010000000000000004 /* SpotFilterState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotFilterState.swift; sourceTree = "<group>"; };
+		A00110010000000000000005 /* SpotRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotRepository.swift; sourceTree = "<group>"; };
+		A00110010000000000000006 /* LocalSpotRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSpotRepository.swift; sourceTree = "<group>"; };
+		A00110010000000000000007 /* FavoritesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesStore.swift; sourceTree = "<group>"; };
+		A00110010000000000000008 /* SpotStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotStore.swift; sourceTree = "<group>"; };
+		A00110010000000000000009 /* ImageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStore.swift; sourceTree = "<group>"; };
+		A0011001000000000000000A /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		A0011001000000000000000B /* NavigationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationService.swift; sourceTree = "<group>"; };
+		A0011001000000000000000C /* ExploreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreView.swift; sourceTree = "<group>"; };
+		A0011001000000000000000D /* FilterSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSheetView.swift; sourceTree = "<group>"; };
+		A0011001000000000000000E /* SpotCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotCardView.swift; sourceTree = "<group>"; };
+		A0011001000000000000000F /* SpotDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotDetailView.swift; sourceTree = "<group>"; };
+		A00110010000000000000010 /* AttributeTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeTagView.swift; sourceTree = "<group>"; };
+		A00110010000000000000011 /* SeedOrUserPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedOrUserPhotoView.swift; sourceTree = "<group>"; };
+		A00110010000000000000012 /* SavedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedView.swift; sourceTree = "<group>"; };
+		A00110010000000000000013 /* AddSpotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSpotView.swift; sourceTree = "<group>"; };
+		A00110010000000000000014 /* LocationPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerView.swift; sourceTree = "<group>"; };
+		A00110010000000000000015 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A00110010000000000000016 /* SeededSpots.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SeededSpots.json; sourceTree = "<group>"; };
+		A00110010000000000000017 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A00110010000000000000018 /* PerchIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; path = PerchIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00110010000000000000019 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		A0011001000000000000001A /* PhotoCropperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCropperView.swift; sourceTree = "<group>"; };
+		A0011001000000000000001B /* PerchTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerchTheme.swift; sourceTree = "<group>"; };
+		A0011001000000000000001C /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
+		A0011001000000000000001D /* SpotReview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotReview.swift; sourceTree = "<group>"; };
+		A0011001000000000000001E /* ProfileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStore.swift; sourceTree = "<group>"; };
+		A0011001000000000000001F /* ReviewStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewStore.swift; sourceTree = "<group>"; };
+		A00110010000000000000020 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A00120010000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A00130010000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				A00130010000000000000002 /* PerchIOS */,
+				A00130010000000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A00130010000000000000002 /* PerchIOS */ = {
+			isa = PBXGroup;
+			children = (
+				A00110010000000000000001 /* PerchIOSApp.swift */,
+				A00110010000000000000019 /* AppState.swift */,
+				A0011001000000000000001B /* PerchTheme.swift */,
+				A00130010000000000000004 /* Models */,
+				A00130010000000000000005 /* Data */,
+				A00130010000000000000006 /* Features */,
+				A00130010000000000000007 /* Services */,
+				A00130010000000000000008 /* Resources */,
+				A00110010000000000000017 /* Info.plist */,
+			);
+			path = PerchIOS;
+			sourceTree = "<group>";
+		};
+		A00130010000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A00110010000000000000018 /* PerchIOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A00130010000000000000004 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A00110010000000000000002 /* Spot.swift */,
+				A00110010000000000000003 /* SpotEnums.swift */,
+				A00110010000000000000004 /* SpotFilterState.swift */,
+				A0011001000000000000001C /* UserProfile.swift */,
+				A0011001000000000000001D /* SpotReview.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A00130010000000000000005 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				A00110010000000000000005 /* SpotRepository.swift */,
+				A00110010000000000000006 /* LocalSpotRepository.swift */,
+				A00110010000000000000007 /* FavoritesStore.swift */,
+				A00110010000000000000008 /* SpotStore.swift */,
+				A0011001000000000000001E /* ProfileStore.swift */,
+				A0011001000000000000001F /* ReviewStore.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		A00130010000000000000006 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				A00130010000000000000009 /* Explore */,
+				A0013001000000000000000A /* SpotDetail */,
+				A0013001000000000000000B /* Saved */,
+				A0013001000000000000000C /* AddSpot */,
+				A0013001000000000000000D /* Profile */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		A00130010000000000000007 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				A00110010000000000000009 /* ImageStore.swift */,
+				A0011001000000000000000A /* LocationManager.swift */,
+				A0011001000000000000000B /* NavigationService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		A00130010000000000000008 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A00110010000000000000015 /* Assets.xcassets */,
+				A00110010000000000000016 /* SeededSpots.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A00130010000000000000009 /* Explore */ = {
+			isa = PBXGroup;
+			children = (
+				A0011001000000000000000C /* ExploreView.swift */,
+				A0011001000000000000000D /* FilterSheetView.swift */,
+				A0011001000000000000000E /* SpotCardView.swift */,
+			);
+			path = Explore;
+			sourceTree = "<group>";
+		};
+		A0013001000000000000000A /* SpotDetail */ = {
+			isa = PBXGroup;
+			children = (
+				A0011001000000000000000F /* SpotDetailView.swift */,
+				A00110010000000000000010 /* AttributeTagView.swift */,
+				A00110010000000000000011 /* SeedOrUserPhotoView.swift */,
+			);
+			path = SpotDetail;
+			sourceTree = "<group>";
+		};
+		A0013001000000000000000B /* Saved */ = {
+			isa = PBXGroup;
+			children = (
+				A00110010000000000000012 /* SavedView.swift */,
+			);
+			path = Saved;
+			sourceTree = "<group>";
+		};
+		A0013001000000000000000C /* AddSpot */ = {
+			isa = PBXGroup;
+			children = (
+				A00110010000000000000013 /* AddSpotView.swift */,
+				A00110010000000000000014 /* LocationPickerView.swift */,
+				A0011001000000000000001A /* PhotoCropperView.swift */,
+			);
+			path = AddSpot;
+			sourceTree = "<group>";
+		};
+		A0013001000000000000000D /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				A00110010000000000000020 /* ProfileView.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A00140010000000000000001 /* PerchIOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00150010000000000000001 /* Build configuration list for PBXNativeTarget "PerchIOS" */;
+			buildPhases = (
+				A00120010000000000000002 /* Sources */,
+				A00120010000000000000001 /* Frameworks */,
+				A00120010000000000000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PerchIOS;
+			productName = PerchIOS;
+			productReference = A00110010000000000000018 /* PerchIOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A00160010000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1610;
+				LastUpgradeCheck = 1610;
+				TargetAttributes = {
+					A00140010000000000000001 = {
+						CreatedOnToolsVersion = 16.1;
+					};
+				};
+			};
+			buildConfigurationList = A00150010000000000000002 /* Build configuration list for PBXProject "PerchIOS" */;
+			compatibilityVersion = "Xcode 15.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A00130010000000000000001;
+			productRefGroup = A00130010000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A00140010000000000000001 /* PerchIOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A00120010000000000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00100010000000000000015 /* Assets.xcassets in Resources */,
+				A00100010000000000000016 /* SeededSpots.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A00120010000000000000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00100010000000000000001 /* PerchIOSApp.swift in Sources */,
+				A00100010000000000000019 /* AppState.swift in Sources */,
+				A0010001000000000000001B /* PerchTheme.swift in Sources */,
+				A00100010000000000000002 /* Spot.swift in Sources */,
+				A00100010000000000000003 /* SpotEnums.swift in Sources */,
+				A00100010000000000000004 /* SpotFilterState.swift in Sources */,
+				A0010001000000000000001C /* UserProfile.swift in Sources */,
+				A0010001000000000000001D /* SpotReview.swift in Sources */,
+				A00100010000000000000005 /* SpotRepository.swift in Sources */,
+				A00100010000000000000006 /* LocalSpotRepository.swift in Sources */,
+				A00100010000000000000007 /* FavoritesStore.swift in Sources */,
+				A00100010000000000000008 /* SpotStore.swift in Sources */,
+				A0010001000000000000001E /* ProfileStore.swift in Sources */,
+				A0010001000000000000001F /* ReviewStore.swift in Sources */,
+				A00100010000000000000009 /* ImageStore.swift in Sources */,
+				A0010001000000000000000A /* LocationManager.swift in Sources */,
+				A0010001000000000000000B /* NavigationService.swift in Sources */,
+				A0010001000000000000000C /* ExploreView.swift in Sources */,
+				A0010001000000000000000D /* FilterSheetView.swift in Sources */,
+				A0010001000000000000000E /* SpotCardView.swift in Sources */,
+				A0010001000000000000000F /* SpotDetailView.swift in Sources */,
+				A00100010000000000000010 /* AttributeTagView.swift in Sources */,
+				A00100010000000000000011 /* SeedOrUserPhotoView.swift in Sources */,
+				A00100010000000000000012 /* SavedView.swift in Sources */,
+				A00100010000000000000013 /* AddSpotView.swift in Sources */,
+				A00100010000000000000014 /* LocationPickerView.swift in Sources */,
+				A00100010000000000000020 /* ProfileView.swift in Sources */,
+				A0010001000000000000001A /* PhotoCropperView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A00170010000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = UX749Q7TAL;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = PerchIOS/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kiacha.PerchIOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		A00170010000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = UX749Q7TAL;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = PerchIOS/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kiacha.PerchIOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		A00170010000000000000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A00170010000000000000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A00150010000000000000001 /* Build configuration list for PBXNativeTarget "PerchIOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00170010000000000000001 /* Debug */,
+				A00170010000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A00150010000000000000002 /* Build configuration list for PBXProject "PerchIOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00170010000000000000003 /* Debug */,
+				A00170010000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A00160010000000000000001 /* Project object */;
+}
