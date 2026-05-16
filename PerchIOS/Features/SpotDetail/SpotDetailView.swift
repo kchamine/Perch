@@ -13,6 +13,7 @@ struct SpotDetailView: View {
 
     @State private var showEditSheet = false
     @State private var showReviewComposer = false
+    @State private var pendingDeletionID: UUID?
     @State private var reviewTitle = ""
     @State private var reviewNote = ""
     @State private var settleInEase = 4.0
@@ -145,6 +146,22 @@ struct SpotDetailView: View {
         .background(PerchTheme.background.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.hidden, for: .navigationBar)
+        .alert("Delete review?", isPresented: Binding(
+            get: { pendingDeletionID != nil },
+            set: { if !$0 { pendingDeletionID = nil } }
+        )) {
+            Button("Delete", role: .destructive) {
+                if let id = pendingDeletionID {
+                    reviewStore.deleteReview(id: id)
+                }
+                pendingDeletionID = nil
+            }
+            Button("Cancel", role: .cancel) {
+                pendingDeletionID = nil
+            }
+        } message: {
+            Text("This review will be permanently removed.")
+        }
         .sheet(isPresented: $showEditSheet) {
             AddSpotView(editingSpot: currentSpot)
         }
@@ -420,6 +437,16 @@ struct SpotDetailView: View {
                 Text(String(format: "%.1f", review.overallRating))
                     .font(.headline.weight(.bold))
                     .foregroundStyle(PerchTheme.primary)
+                Button {
+                    pendingDeletionID = review.id
+                } label: {
+                    Image(systemName: "trash")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                        .padding(8)
+                        .background(PerchTheme.surfaceStrong, in: Circle())
+                }
+                .buttonStyle(.plain)
             }
 
             if !review.note.isEmpty {

@@ -51,6 +51,12 @@ final class ReviewStore: ObservableObject {
         persist()
     }
 
+    func deleteReview(id: UUID) {
+        guard let index = reviews.firstIndex(where: { $0.id == id }) else { return }
+        reviews.remove(at: index)
+        persist()
+    }
+
     func summary(for spotID: UUID) -> SpotReviewSummary {
         let scoped = reviews(for: spotID)
         guard !scoped.isEmpty else { return .empty }

@@ -14,6 +14,7 @@ struct ProfileView: View {
     @State private var avatarImage: UIImage?
     @State private var isLoadingAvatar = false
     @State private var isShowingEditProfile = false
+    @State private var pendingDeletionID: UUID?
 
     private var displayName: String {
         let trimmed = profile.displayName.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -102,6 +103,22 @@ struct ProfileView: View {
             .task {
                 refreshProfileFromStore()
                 await loadAvatar()
+            }
+            .alert("Delete review?", isPresented: Binding(
+                get: { pendingDeletionID != nil },
+                set: { if !$0 { pendingDeletionID = nil } }
+            )) {
+                Button("Delete", role: .destructive) {
+                    if let id = pendingDeletionID {
+                        reviewStore.deleteReview(id: id)
+                    }
+                    pendingDeletionID = nil
+                }
+                Button("Cancel", role: .cancel) {
+                    pendingDeletionID = nil
+                }
+            } message: {
+                Text("This review will be permanently removed.")
             }
             .sheet(isPresented: $isShowingEditProfile) {
                 EditProfileView(
@@ -534,6 +551,16 @@ struct ProfileView: View {
                 Text(String(format: "%.1f", review.overallRating))
                     .font(.headline.weight(.bold))
                     .foregroundStyle(PerchTheme.primary)
+                Button {
+                    pendingDeletionID = review.id
+                } label: {
+                    Image(systemName: "trash")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                        .padding(8)
+                        .background(PerchTheme.controlFill, in: Circle())
+                }
+                .buttonStyle(.plain)
             }
 
             if !review.note.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
