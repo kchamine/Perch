@@ -45,6 +45,15 @@ final class SpotStore: ObservableObject {
         persistUserSpots()
     }
 
+    func update(_ spot: Spot) {
+        guard let index = userSpots.firstIndex(where: { $0.id == spot.id }) else { return }
+        userSpots[index] = spot
+        if selectedSpot?.id == spot.id {
+            selectedSpot = spot
+        }
+        persistUserSpots()
+    }
+
     func deleteUserSpots(ids: Set<UUID>) {
         userSpots.removeAll { ids.contains($0.id) }
         if selectedSpot.map({ ids.contains($0.id) }) == true {

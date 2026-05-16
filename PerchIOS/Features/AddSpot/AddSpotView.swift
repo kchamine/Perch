@@ -3,9 +3,16 @@ import SwiftUI
 import UIKit
 
 struct AddSpotView: View {
+    let editingSpot: Spot?
+
+    init(editingSpot: Spot? = nil) {
+        self.editingSpot = editingSpot
+    }
+
     @EnvironmentObject private var store: SpotStore
     @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var appState: AppState
+    @Environment(\.dismiss) private var dismiss
 
     @State private var name = ""
     @State private var subtitle = ""
@@ -34,6 +41,8 @@ struct AddSpotView: View {
     @State private var isSaving = false
     @State private var isLoadingPhoto = false
     @State private var isShowingCropper = false
+    @State private var existingPhotoPath: String?
+    @State private var newPhotoSelected = false
     @FocusState private var focusedField: Field?
 
     private let imageStore = ImageStore()
@@ -52,10 +61,12 @@ struct AddSpotView: View {
                         .padding(.top, 8)
 
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("Post a Perch")
+                        Text(editingSpot == nil ? "Post a Perch" : "Edit Perch")
                             .font(PerchTheme.headline(40))
                             .foregroundStyle(PerchTheme.primary)
-                        Text("Share a real public place someone can actually sit, pause, and trust.")
+                        Text(editingSpot == nil
+                             ? "Share a real public place someone can actually sit, pause, and trust."
+                             : "Update any detail below — your reviews and saves stay attached.")
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(PerchTheme.textMuted)
                             .lineSpacing(3)
@@ -228,7 +239,7 @@ struct AddSpotView: View {
                                 ProgressView()
                                     .tint(.white)
                             }
-                            Text(isSaving ? "Posting..." : "Post Perch")
+                            Text(isSaving ? (editingSpot == nil ? "Posting..." : "Saving...") : (editingSpot == nil ? "Post Perch" : "Save Changes"))
                             Image(systemName: "paperplane.fill")
                         }
                         .font(PerchTheme.label(13, weight: .bold))
@@ -262,7 +273,9 @@ struct AddSpotView: View {
             .scrollDismissesKeyboard(.interactively)
             .toolbar(.hidden, for: .navigationBar)
             .onAppear {
-                if let coordinate = locationManager.location?.coordinate {
+                if let spot = editingSpot {
+                    prefillForEditing(spot)
+                } else if let coordinate = locationManager.location?.coordinate {
                     latitude = coordinate.latitude
                     longitude = coordinate.longitude
                 }
@@ -330,7 +343,7 @@ struct AddSpotView: View {
                 previewCheckRow(isReady: !trimmedName.isEmpty, text: "Named clearly")
                 previewCheckRow(isReady: !trimmedSubtitle.isEmpty, text: "Reason to visit is clear")
                 previewCheckRow(isReady: publicAccessConfirmed, text: "Public access confirmed")
-                previewCheckRow(isReady: selectedUIImage != nil, text: selectedUIImage == nil ? "Photo required before posting" : "Photo ready")
+                previewCheckRow(isReady: hasPhoto, text: hasPhoto ? "Photo ready" : "Photo required before posting")
             }
         }
         .padding(16)
@@ -568,10 +581,12 @@ struct AddSpotView: View {
         !isSaving && validationMessage == nil
     }
 
+    private var hasPhoto: Bool { selectedUIImage != nil || existingPhotoPath != nil }
+
     private var validationMessage: String? {
         if trimmedName.isEmpty { return "Add a perch name before posting." }
         if trimmedSubtitle.isEmpty { return "Add a short reason to go so the post feels discoverable later." }
-        if selectedUIImage == nil { return "Add a real photo of this perch before posting." }
+        if !hasPhoto { return "Add a real photo of this perch before posting." }
         if !publicAccessConfirmed { return "Confirm public access before posting so Perch stays trustworthy." }
         return nil
     }
@@ -621,37 +636,100 @@ struct AddSpotView: View {
         defer { isSaving = false }
 
         do {
-            let savedPath = try imageStore.saveImage(selectedUIImage)
-            let spot = Spot(
-                id: UUID(),
-                name: trimmedName,
-                subtitle: trimmedSubtitle,
-                latitude: latitude,
-                longitude: longitude,
-                photoName: nil,
-                userPhotoPath: savedPath,
-                spotType: spotType,
-                seatingType: seatingType,
-                hasSeating: hasSeating,
-                shadeLevel: shadeLevel,
-                noiseLevel: noiseLevel,
-                crowdLevel: crowdLevel,
-                viewType: viewType,
-                bestTime: bestTime,
-                accessibility: accessibility,
-                accessEffort: accessEffort,
-                comfortRating: Int(comfortRating),
-                scenicRating: Int(scenicRating),
-                publicAccessConfirmed: publicAccessConfirmed,
-                notes: notes.trimmingCharacters(in: .whitespacesAndNewlines),
-                lastConfirmed: .now
-            )
-            store.addSpot(spot)
-            resetForm(keepingLocation: true)
-            saveStateMessage = nil
-            appState.revealInExplore(spot)
+            if let original = editingSpot {
+                let photoPath: String?
+                if newPhotoSelected {
+                    photoPath = try imageStore.saveImage(selectedUIImage)
+                    imageStore.deleteImage(atPath: existingPhotoPath)
+                } else {
+                    photoPath = existingPhotoPath
+                }
+                let updated = Spot(
+                    id: original.id,
+                    name: trimmedName,
+                    subtitle: trimmedSubtitle,
+                    latitude: latitude,
+                    longitude: longitude,
+                    photoName: nil,
+                    userPhotoPath: photoPath,
+                    spotType: spotType,
+                    seatingType: seatingType,
+                    hasSeating: hasSeating,
+                    shadeLevel: shadeLevel,
+                    noiseLevel: noiseLevel,
+                    crowdLevel: crowdLevel,
+                    viewType: viewType,
+                    bestTime: bestTime,
+                    accessibility: accessibility,
+                    accessEffort: accessEffort,
+                    comfortRating: Int(comfortRating),
+                    scenicRating: Int(scenicRating),
+                    publicAccessConfirmed: publicAccessConfirmed,
+                    notes: notes.trimmingCharacters(in: .whitespacesAndNewlines),
+                    lastConfirmed: .now
+                )
+                store.update(updated)
+                dismiss()
+            } else {
+                let savedPath = try imageStore.saveImage(selectedUIImage)
+                let spot = Spot(
+                    id: UUID(),
+                    name: trimmedName,
+                    subtitle: trimmedSubtitle,
+                    latitude: latitude,
+                    longitude: longitude,
+                    photoName: nil,
+                    userPhotoPath: savedPath,
+                    spotType: spotType,
+                    seatingType: seatingType,
+                    hasSeating: hasSeating,
+                    shadeLevel: shadeLevel,
+                    noiseLevel: noiseLevel,
+                    crowdLevel: crowdLevel,
+                    viewType: viewType,
+                    bestTime: bestTime,
+                    accessibility: accessibility,
+                    accessEffort: accessEffort,
+                    comfortRating: Int(comfortRating),
+                    scenicRating: Int(scenicRating),
+                    publicAccessConfirmed: publicAccessConfirmed,
+                    notes: notes.trimmingCharacters(in: .whitespacesAndNewlines),
+                    lastConfirmed: .now
+                )
+                store.addSpot(spot)
+                resetForm(keepingLocation: true)
+                saveStateMessage = nil
+                appState.revealInExplore(spot)
+            }
         } catch {
             saveStateMessage = error.localizedDescription
+        }
+    }
+
+    private func prefillForEditing(_ spot: Spot) {
+        name = spot.name
+        subtitle = spot.subtitle
+        notes = spot.notes
+        spotType = spot.spotType
+        seatingType = spot.seatingType
+        hasSeating = spot.hasSeating
+        shadeLevel = spot.shadeLevel
+        noiseLevel = spot.noiseLevel
+        crowdLevel = spot.crowdLevel
+        viewType = spot.viewType
+        bestTime = spot.bestTime
+        accessibility = spot.accessibility
+        accessEffort = spot.accessEffort
+        comfortRating = Double(spot.comfortRating)
+        scenicRating = Double(spot.scenicRating)
+        publicAccessConfirmed = spot.publicAccessConfirmed
+        latitude = spot.latitude
+        longitude = spot.longitude
+        existingPhotoPath = spot.userPhotoPath
+        if let path = spot.userPhotoPath,
+           let data = imageStore.imageData(for: path),
+           let image = UIImage(data: data) {
+            selectedUIImage = image
         }
     }
 
@@ -682,6 +760,7 @@ struct AddSpotView: View {
 
     private func applySelectedImage(_ image: UIImage) {
         selectedUIImage = image.normalizedImage()
+        newPhotoSelected = true
         pickerItem = nil
         cropSourceImage = nil
         isShowingCropper = false

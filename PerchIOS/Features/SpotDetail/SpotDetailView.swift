@@ -6,10 +6,12 @@ struct SpotDetailView: View {
     let location: CLLocation?
     let isUserSpot: Bool
 
+    @EnvironmentObject private var store: SpotStore
     @EnvironmentObject private var favorites: FavoritesStore
     @EnvironmentObject private var profileStore: ProfileStore
     @EnvironmentObject private var reviewStore: ReviewStore
 
+    @State private var showEditSheet = false
     @State private var showReviewComposer = false
     @State private var reviewTitle = ""
     @State private var reviewNote = ""
@@ -20,9 +22,13 @@ struct SpotDetailView: View {
     @State private var wouldReturn = true
     @State private var selectedMoments: Set<PerchReviewMoment> = [.soloReset]
 
-    private var isFavorite: Bool { favorites.isFavorite(spot) }
-    private var reviews: [SpotReview] { reviewStore.reviews(for: spot.id) }
-    private var reviewSummary: SpotReviewSummary { reviewStore.summary(for: spot.id) }
+    private var currentSpot: Spot {
+        isUserSpot ? (store.userSpots.first { $0.id == spot.id } ?? spot) : spot
+    }
+
+    private var isFavorite: Bool { favorites.isFavorite(currentSpot) }
+    private var reviews: [SpotReview] { reviewStore.reviews(for: currentSpot.id) }
+    private var reviewSummary: SpotReviewSummary { reviewStore.summary(for: currentSpot.id) }
 
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
 
@@ -38,7 +44,7 @@ struct SpotDetailView: View {
                                 .font(.body)
                                 .foregroundStyle(.secondary)
                                 .lineSpacing(4)
-                            Text(spot.productTextureLine)
+                            Text(currentSpot.productTextureLine)
                                 .font(.subheadline.weight(.semibold))
                                 .foregroundStyle(PerchTheme.primary)
                                 .padding(.top, 2)
@@ -51,14 +57,14 @@ struct SpotDetailView: View {
 
                     editorialSection(title: "Amenities & Vibe") {
                         LazyVGrid(columns: columns, spacing: 14) {
-                            amenityRow(icon: "figure.seated.side", title: "Spot type", value: spot.spotType.label)
-                            amenityRow(icon: "chair.lounge", title: "Seating", value: spot.seatingType.label)
-                            amenityRow(icon: "sun.max", title: "Shade", value: spot.shadeLevel.label)
-                            amenityRow(icon: "speaker.wave.2", title: "Noise", value: spot.noiseLevel.label)
-                            amenityRow(icon: "person.3", title: "Crowd", value: spot.crowdLevel.label)
-                            amenityRow(icon: "sparkles", title: "Best time", value: spot.bestTime.label)
-                            amenityRow(icon: "figure.walk", title: "Access", value: spot.accessEffort.label)
-                            amenityRow(icon: "accessibility", title: "Accessibility", value: spot.accessibility.label)
+                            amenityRow(icon: "figure.seated.side", title: "Spot type", value: currentSpot.spotType.label)
+                            amenityRow(icon: "chair.lounge", title: "Seating", value: currentSpot.seatingType.label)
+                            amenityRow(icon: "sun.max", title: "Shade", value: currentSpot.shadeLevel.label)
+                            amenityRow(icon: "speaker.wave.2", title: "Noise", value: currentSpot.noiseLevel.label)
+                            amenityRow(icon: "person.3", title: "Crowd", value: currentSpot.crowdLevel.label)
+                            amenityRow(icon: "sparkles", title: "Best time", value: currentSpot.bestTime.label)
+                            amenityRow(icon: "figure.walk", title: "Access", value: currentSpot.accessEffort.label)
+                            amenityRow(icon: "accessibility", title: "Accessibility", value: currentSpot.accessibility.label)
                         }
                     }
 
@@ -97,7 +103,7 @@ struct SpotDetailView: View {
                     }
 
                     HStack(spacing: 12) {
-                        Button(action: { favorites.toggle(spot) }) {
+                        Button(action: { favorites.toggle(currentSpot) }) {
                             Label(isFavorite ? "Saved" : "Save for later", systemImage: isFavorite ? "bookmark.fill" : "bookmark")
                                 .font(PerchTheme.label(12, weight: .bold))
                                 .frame(maxWidth: .infinity)
@@ -108,7 +114,7 @@ struct SpotDetailView: View {
                         .foregroundStyle(PerchTheme.primary)
 
                         Button {
-                            NavigationService.openDirections(for: spot)
+                            NavigationService.openDirections(for: currentSpot)
                         } label: {
                             HStack(spacing: 8) {
                                 Text("Get Directions")
@@ -139,6 +145,9 @@ struct SpotDetailView: View {
         .background(PerchTheme.background.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.hidden, for: .navigationBar)
+        .sheet(isPresented: $showEditSheet) {
+            AddSpotView(editingSpot: currentSpot)
+        }
         .sheet(isPresented: $showReviewComposer) {
             NavigationStack {
                 ScrollView {
@@ -164,7 +173,7 @@ struct SpotDetailView: View {
 
     private var heroSection: some View {
         ZStack(alignment: .bottomLeading) {
-            SeedOrUserPhotoView(spot: spot, style: .photoFit)
+            SeedOrUserPhotoView(spot: currentSpot, style: .photoFit)
                 .frame(maxWidth: .infinity)
                 .aspectRatio(contentMode: .fit)
                 .clipShape(RoundedRectangle(cornerRadius: 0))
@@ -185,6 +194,17 @@ struct SpotDetailView: View {
 
                     Spacer()
 
+                    if isUserSpot {
+                        Button { showEditSheet = true } label: {
+                            Image(systemName: "pencil")
+                                .font(.system(size: 15, weight: .semibold))
+                                .foregroundStyle(PerchTheme.textPrimary)
+                                .padding(11)
+                                .background(PerchTheme.heroScrim, in: Circle())
+                        }
+                        .buttonStyle(.plain)
+                    }
+
                     if isFavorite {
                         Image(systemName: "bookmark.fill")
                             .foregroundStyle(PerchTheme.textPrimary)
@@ -194,22 +214,22 @@ struct SpotDetailView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 10) {
-                    Text(spot.name)
+                    Text(currentSpot.name)
                         .font(PerchTheme.headline(32))
                         .foregroundStyle(PerchTheme.primary)
                         .lineLimit(2)
-                    Text(spot.subtitle)
+                    Text(currentSpot.subtitle)
                         .font(.body.weight(.medium))
                         .foregroundStyle(PerchTheme.textPrimary.opacity(0.92))
                         .lineLimit(2)
                     HStack(spacing: 16) {
-                        Label(reviewSummary.count > 0 ? String(format: "%.1f", reviewSummary.averageOverall) : "\(spot.scenicRating).0", systemImage: "star.fill")
+                        Label(reviewSummary.count > 0 ? String(format: "%.1f", reviewSummary.averageOverall) : "\(currentSpot.scenicRating).0", systemImage: "star.fill")
                         Label(distanceText, systemImage: "location")
                     }
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(PerchTheme.textPrimary.opacity(0.92))
 
-                    Label(reviewSummary.trustHeadline(fallback: spot), systemImage: reviewSummary.count > 0 ? "checkmark.seal.fill" : "checkmark.seal")
+                    Label(reviewSummary.trustHeadline(fallback: currentSpot), systemImage: reviewSummary.count > 0 ? "checkmark.seal.fill" : "checkmark.seal")
                         .font(PerchTheme.label(10, weight: .bold))
                         .textCase(.uppercase)
                         .tracking(1)
@@ -270,23 +290,23 @@ struct SpotDetailView: View {
             insightRow(
                 icon: reviewSummary.count > 0 ? "checkmark.seal.fill" : "checkmark.seal",
                 title: "Trust read",
-                value: reviewSummary.trustHeadline(fallback: spot)
+                value: reviewSummary.trustHeadline(fallback: currentSpot)
             )
             insightRow(
                 icon: "calendar.badge.checkmark",
                 title: "Confirmation",
-                value: "\(spot.confirmationFreshnessLabel) • \(formattedDate)"
+                value: "\(currentSpot.confirmationFreshnessLabel) • \(formattedDate)"
             )
             insightRow(
                 icon: "exclamationmark.circle",
                 title: "Practical caveat",
-                value: spot.practicalCaveat
+                value: currentSpot.practicalCaveat
             )
 
             if let bestFor = reviewSummary.bestForText {
                 insightRow(icon: "sparkles", title: "Best use", value: bestFor)
             } else {
-                insightRow(icon: "sparkles", title: "Best use", value: spot.productTextureLine)
+                insightRow(icon: "sparkles", title: "Best use", value: currentSpot.productTextureLine)
             }
         }
         .padding(18)
@@ -561,7 +581,7 @@ struct SpotDetailView: View {
 
     private func submitReview() {
         reviewStore.addReview(
-            spotID: spot.id,
+            spotID: currentSpot.id,
             authorName: profileStore.profile.reviewAuthorName,
             title: reviewTitle,
             note: reviewNote,
@@ -588,18 +608,18 @@ struct SpotDetailView: View {
     }
 
     private var formattedDate: String {
-        spot.lastConfirmed.formatted(date: .abbreviated, time: .omitted)
+        currentSpot.lastConfirmed.formatted(date: .abbreviated, time: .omitted)
     }
 
     private var distanceText: String {
         guard let location else { return "distance unavailable" }
-        let meters = spot.distance(from: location)
+        let meters = currentSpot.distance(from: location)
         if meters < 1000 { return "\(Int(meters)) m away" }
         return String(format: "%.1f km away", meters / 1000)
     }
 
     private var notesText: String? {
-        let trimmed = spot.notes.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmed = currentSpot.notes.trimmingCharacters(in: .whitespacesAndNewlines)
         return trimmed.isEmpty ? nil : trimmed
     }
 }

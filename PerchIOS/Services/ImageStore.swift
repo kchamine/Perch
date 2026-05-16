@@ -26,6 +26,11 @@ final class ImageStore {
         return url.path
     }
 
+    func deleteImage(atPath path: String?) {
+        guard let path else { return }
+        try? fileManager.removeItem(atPath: path)
+    }
+
     func imageData(for path: String?) -> Data? {
         guard let path else { return nil }
         return fileManager.contents(atPath: path)

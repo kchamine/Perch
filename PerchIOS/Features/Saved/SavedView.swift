@@ -9,6 +9,7 @@ struct SavedView: View {
     @State private var searchText = ""
     @State private var sortOption: SpotSortOption = .recentlyConfirmed
     @State private var showProfile = false
+    @State private var spotToEdit: Spot?
 
     var body: some View {
         NavigationStack {
@@ -83,6 +84,9 @@ struct SavedView: View {
             .sheet(isPresented: $showProfile) {
                 ProfileView()
             }
+            .sheet(item: $spotToEdit) { spot in
+                AddSpotView(editingSpot: spot)
+            }
         }
     }
 
@@ -139,15 +143,28 @@ struct SavedView: View {
                     }
                     Spacer(minLength: 12)
                     if showDelete {
-                        Button(role: .destructive) {
-                            deleteSpot(spot)
-                        } label: {
-                            Image(systemName: "trash")
-                                .foregroundStyle(PerchTheme.iconOnLightControl)
-                                .padding(14)
-                                .background(Color.white.opacity(0.92), in: Circle())
+                        HStack(spacing: 8) {
+                            Button {
+                                spotToEdit = spot
+                            } label: {
+                                Image(systemName: "pencil")
+                                    .font(.system(size: 15, weight: .semibold))
+                                    .foregroundStyle(PerchTheme.iconOnLightControl)
+                                    .padding(14)
+                                    .background(Color.white.opacity(0.92), in: Circle())
+                            }
+                            .buttonStyle(.plain)
+
+                            Button(role: .destructive) {
+                                deleteSpot(spot)
+                            } label: {
+                                Image(systemName: "trash")
+                                    .foregroundStyle(PerchTheme.iconOnLightControl)
+                                    .padding(14)
+                                    .background(Color.white.opacity(0.92), in: Circle())
+                            }
+                            .buttonStyle(.plain)
                         }
-                        .buttonStyle(.plain)
                     } else {
                         Image(systemName: "bookmark.fill")
                             .foregroundStyle(PerchTheme.iconOnLightControl)
