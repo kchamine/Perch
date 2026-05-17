@@ -69,6 +69,7 @@ final class SpotStore: ObservableObject {
     func filteredSpots(location: CLLocation?, favorites: Set<UUID>) -> [Spot] {
         let radiusMeters = 3_500.0
         return allSpots.filter { spot in
+            if spot.isPrivate { return false }
             if filters.favoritesOnly && !favorites.contains(spot.id) { return false }
             if filters.quietOnly && spot.noiseLevel != .quiet { return false }
             if filters.shadedOnly && spot.shadeLevel == .sunny { return false }

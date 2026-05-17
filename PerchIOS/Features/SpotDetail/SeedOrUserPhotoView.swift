@@ -188,6 +188,15 @@ struct SeedOrUserPhotoView: View {
         case .quietGreen: [.green, .mint]
         case .waterfrontLedge: [.indigo, .cyan]
         case .sunsetTerrace: [.orange, .pink]
+        case .centralParkBench: [.green, .brown]
+        case .highLineLedge: [.gray, .green]
+        case .brooklynBridgePark: [.blue, .indigo]
+        case .griffithOverlook: [.orange, .brown]
+        case .veniceBeachPerch: [.cyan, .orange]
+        case .echoLakeSeat: [.teal, .green]
+        case .kerryParkBench: [.mint, .teal]
+        case .waterfrontPier: [.blue, .cyan]
+        case .discoveryParkEdge: [.green, .blue]
         case .none: [.gray, .blue]
         }
     }

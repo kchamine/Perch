@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		A00100010000000000000001 /* PerchIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000001 /* PerchIOSApp.swift */; };
+		B00100010000000000000001 /* SpotStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00110010000000000000001 /* SpotStoreTests.swift */; };
+		B00100010000000000000002 /* FavoritesStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00110010000000000000002 /* FavoritesStoreTests.swift */; };
+		B00100010000000000000003 /* ReviewStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00110010000000000000003 /* ReviewStoreTests.swift */; };
+		B00100010000000000000004 /* PerchIOS.app in Frameworks */ = {isa = PBXBuildFile; fileRef = A00110010000000000000018 /* PerchIOS.app */; };
 		A00100010000000000000002 /* Spot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000002 /* Spot.swift */; };
 		A00100010000000000000003 /* SpotEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000003 /* SpotEnums.swift */; };
 		A00100010000000000000004 /* SpotFilterState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000004 /* SpotFilterState.swift */; };
@@ -37,6 +41,7 @@
 		A0010001000000000000001E /* ProfileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011001000000000000001E /* ProfileStore.swift */; };
 		A0010001000000000000001F /* ReviewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011001000000000000001F /* ReviewStore.swift */; };
 		A00100010000000000000020 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000020 /* ProfileView.swift */; };
+		A00100010000000000000021 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000021 /* OnboardingView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,10 +77,22 @@
 		A0011001000000000000001E /* ProfileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStore.swift; sourceTree = "<group>"; };
 		A0011001000000000000001F /* ReviewStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewStore.swift; sourceTree = "<group>"; };
 		A00110010000000000000020 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		A00110010000000000000021 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		B00110010000000000000001 /* SpotStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotStoreTests.swift; sourceTree = "<group>"; };
+		B00110010000000000000002 /* FavoritesStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesStoreTests.swift; sourceTree = "<group>"; };
+		B00110010000000000000003 /* ReviewStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewStoreTests.swift; sourceTree = "<group>"; };
+		B00110010000000000000004 /* PerchIOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = PerchIOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		A00120010000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B00120010000000000000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -90,6 +107,7 @@
 			children = (
 				A00130010000000000000002 /* PerchIOS */,
 				A00130010000000000000003 /* Products */,
+				B00130010000000000000001 /* PerchIOSTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -113,8 +131,19 @@
 			isa = PBXGroup;
 			children = (
 				A00110010000000000000018 /* PerchIOS.app */,
+				B00110010000000000000004 /* PerchIOSTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B00130010000000000000001 /* PerchIOSTests */ = {
+			isa = PBXGroup;
+			children = (
+				B00110010000000000000001 /* SpotStoreTests.swift */,
+				B00110010000000000000002 /* FavoritesStoreTests.swift */,
+				B00110010000000000000003 /* ReviewStoreTests.swift */,
+			);
+			path = PerchIOSTests;
 			sourceTree = "<group>";
 		};
 		A00130010000000000000004 /* Models */ = {
@@ -150,8 +179,17 @@
 				A0013001000000000000000B /* Saved */,
 				A0013001000000000000000C /* AddSpot */,
 				A0013001000000000000000D /* Profile */,
+				A0013001000000000000000E /* Onboarding */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		A0013001000000000000000E /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				A00110010000000000000021 /* OnboardingView.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 		A00130010000000000000007 /* Services */ = {
@@ -239,6 +277,23 @@
 			productReference = A00110010000000000000018 /* PerchIOS.app */;
 			productType = "com.apple.product-type.application";
 		};
+		B00140010000000000000001 /* PerchIOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B00150010000000000000001 /* Build configuration list for PBXNativeTarget "PerchIOSTests" */;
+			buildPhases = (
+				B00120010000000000000002 /* Sources */,
+				B00120010000000000000001 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B00140010000000000000002 /* PBXTargetDependency */,
+			);
+			name = PerchIOSTests;
+			productName = PerchIOSTests;
+			productReference = B00110010000000000000004 /* PerchIOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -251,6 +306,10 @@
 				TargetAttributes = {
 					A00140010000000000000001 = {
 						CreatedOnToolsVersion = 16.1;
+					};
+					B00140010000000000000001 = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = A00140010000000000000001;
 					};
 				};
 			};
@@ -268,6 +327,7 @@
 			projectRoot = "";
 			targets = (
 				A00140010000000000000001 /* PerchIOS */,
+				B00140010000000000000001 /* PerchIOSTests */,
 			);
 		};
 /* End PBXProject section */
@@ -283,6 +343,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXContainerItemProxy section */
+		B00140010000000000000003 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A00160010000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A00140010000000000000001;
+			remoteInfo = PerchIOS;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+		B00140010000000000000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A00140010000000000000001 /* PerchIOS */;
+			targetProxy = B00140010000000000000003 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXSourcesBuildPhase section */
 		A00120010000000000000002 /* Sources */ = {
@@ -317,6 +395,17 @@
 				A00100010000000000000014 /* LocationPickerView.swift in Sources */,
 				A00100010000000000000020 /* ProfileView.swift in Sources */,
 				A0010001000000000000001A /* PhotoCropperView.swift in Sources */,
+				A00100010000000000000021 /* OnboardingView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B00120010000000000000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B00100010000000000000001 /* SpotStoreTests.swift in Sources */,
+				B00100010000000000000002 /* FavoritesStoreTests.swift in Sources */,
+				B00100010000000000000003 /* ReviewStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,6 +420,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UX749Q7TAL;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_TESTABILITY = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = PerchIOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -372,6 +462,40 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		B00170010000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = UX749Q7TAL;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kiacha.PerchIOSTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PerchIOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PerchIOS";
+			};
+			name = Debug;
+		};
+		B00170010000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = UX749Q7TAL;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kiacha.PerchIOSTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PerchIOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PerchIOS";
 			};
 			name = Release;
 		};
@@ -426,6 +550,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		B00150010000000000000001 /* Build configuration list for PBXNativeTarget "PerchIOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B00170010000000000000001 /* Debug */,
+				B00170010000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		A00150010000000000000001 /* Build configuration list for PBXNativeTarget "PerchIOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

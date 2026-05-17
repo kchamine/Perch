@@ -30,6 +30,7 @@ struct AddSpotView: View {
     @State private var comfortRating = 4.0
     @State private var scenicRating = 4.0
     @State private var publicAccessConfirmed = true
+    @State private var isPrivate = false
     @State private var latitude = 37.8000
     @State private var longitude = -122.4330
     @State private var pickerItem: PhotosPickerItem?
@@ -181,6 +182,17 @@ struct AddSpotView: View {
                                     Text("Actual place to sit")
                                         .font(.headline)
                                     Text("Turn this off if the perch is more of a pause point, ledge, or leaning stop than a true seat.")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            .toggleStyle(.switch)
+
+                            Toggle(isOn: $isPrivate) {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Keep it Private?")
+                                        .font(.headline)
+                                    Text("Only visible to you in Saved → My Spots. Won't show up in Explore or search.")
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                 }
@@ -665,6 +677,7 @@ struct AddSpotView: View {
                     comfortRating: Int(comfortRating),
                     scenicRating: Int(scenicRating),
                     publicAccessConfirmed: publicAccessConfirmed,
+                    isPrivate: isPrivate,
                     notes: notes.trimmingCharacters(in: .whitespacesAndNewlines),
                     lastConfirmed: .now
                 )
@@ -693,6 +706,7 @@ struct AddSpotView: View {
                     comfortRating: Int(comfortRating),
                     scenicRating: Int(scenicRating),
                     publicAccessConfirmed: publicAccessConfirmed,
+                    isPrivate: isPrivate,
                     notes: notes.trimmingCharacters(in: .whitespacesAndNewlines),
                     lastConfirmed: .now
                 )
@@ -723,6 +737,7 @@ struct AddSpotView: View {
         comfortRating = Double(spot.comfortRating)
         scenicRating = Double(spot.scenicRating)
         publicAccessConfirmed = spot.publicAccessConfirmed
+        isPrivate = spot.isPrivate
         latitude = spot.latitude
         longitude = spot.longitude
         existingPhotoPath = spot.userPhotoPath
@@ -751,6 +766,7 @@ struct AddSpotView: View {
         comfortRating = 4
         scenicRating = 4
         publicAccessConfirmed = true
+        isPrivate = false
         resetPhotoSelectionState()
         if !keepingLocation {
             latitude = 37.8000

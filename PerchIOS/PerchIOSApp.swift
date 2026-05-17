@@ -31,7 +31,17 @@ struct PerchIOSApp: App {
             .environmentObject(reviewStore)
             .task {
                 store.load()
-                locationManager.requestIfNeeded()
+                if appState.hasCompletedOnboarding {
+                    locationManager.requestIfNeeded()
+                }
+            }
+            .fullScreenCover(isPresented: Binding(
+                get: { !appState.hasCompletedOnboarding },
+                set: { _ in }
+            )) {
+                OnboardingView()
+                    .environmentObject(appState)
+                    .environmentObject(locationManager)
             }
         }
     }

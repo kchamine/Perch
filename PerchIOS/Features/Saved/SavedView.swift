@@ -139,6 +139,9 @@ struct SavedView: View {
                         HStack(spacing: 8) {
                             InlineTag(text: spot.viewType.label, tint: .white)
                             InlineTag(text: spot.bestTime.label, tint: .white)
+                            if spot.isPrivate {
+                                InlineTag(icon: "lock.fill", text: "Private", tint: .white)
+                            }
                         }
                     }
                     Spacer(minLength: 12)

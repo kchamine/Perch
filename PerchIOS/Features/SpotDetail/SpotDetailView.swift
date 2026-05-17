@@ -209,6 +209,17 @@ struct SpotDetailView: View {
                         .background(PerchTheme.surfaceStrong, in: Capsule())
                         .foregroundStyle(PerchTheme.primary)
 
+                    if currentSpot.isPrivate {
+                        Label("Private", systemImage: "lock.fill")
+                            .font(PerchTheme.label(10, weight: .bold))
+                            .textCase(.uppercase)
+                            .tracking(1.2)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 7)
+                            .background(PerchTheme.surfaceStrong, in: Capsule())
+                            .foregroundStyle(PerchTheme.textMuted)
+                    }
+
                     Spacer()
 
                     if isUserSpot {

@@ -22,10 +22,33 @@ PerchIOS is a native SwiftUI iPhone MVP for finding scenic public spots to sit a
 3. Run the `PerchIOS` target.
 4. Allow location access to see nearby filtering behave properly.
 
+## Build via xcodebuild
+
+```
+xcodebuild \
+  -project PerchIOS.xcodeproj \
+  -scheme PerchIOS \
+  -destination 'generic/platform=iOS Simulator' \
+  build
+```
+
+## Run unit tests
+
+```
+xcodebuild \
+  -project PerchIOS.xcodeproj \
+  -scheme PerchIOS \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
+  test
+```
+
+Tests cover `SpotStore`, `FavoritesStore`, and `ReviewStore` (47 test cases) with ephemeral `UserDefaults` and a stub repository so they run cleanly without touching real device state.
+
 ## Suggested first smoke test in Xcode
-- Launch app → Explore loads with map pins and bottom cards
+- Launch app → onboarding appears on first install; Explore loads after
 - Toggle filters and confirm list changes
 - Open a spot and save it to favorites
 - Visit Saved and confirm it appears
+- Add a new spot with "Keep it Private?" toggled on → it appears in Saved → My Spots with a Private badge but not in Explore
 - Add a new spot with/without a photo and confirm it appears in Explore
 - Tap directions and confirm Apple Maps opens

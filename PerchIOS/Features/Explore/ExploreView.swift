@@ -460,7 +460,7 @@ struct ExploreView: View {
                 center: location.coordinate,
                 span: MKCoordinateSpan(latitudeDelta: 0.08, longitudeDelta: 0.08)
             ))
-        } else if let first = store.allSpots.first {
+        } else if let first = store.allSpots.first(where: { !$0.isPrivate }) {
             cameraPosition = .region(MKCoordinateRegion(
                 center: first.coordinate,
                 span: MKCoordinateSpan(latitudeDelta: 0.12, longitudeDelta: 0.12)
