@@ -315,6 +315,20 @@ struct ProfileView: View {
                     .foregroundStyle(PerchTheme.textMuted)
             }
 
+            settingsGroup(title: "Directions", subtitle: "Choose which maps app Perch opens for spot directions") {
+                VStack(alignment: .leading, spacing: 10) {
+                    Label("Preferred Maps App", systemImage: "map")
+                        .font(.headline)
+                        .foregroundStyle(PerchTheme.primary)
+                    Picker("Preferred Maps App", selection: mapsAppPreferenceBinding) {
+                        ForEach(MapsAppPreference.allCases) { preference in
+                            Text(preference.label).tag(preference)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                }
+            }
+
             settingsGroup(title: "Local data & privacy", subtitle: "Truthful controls for what stays on this device today") {
                 infoRow(icon: "internaldrive", title: "Profile data stays local", detail: "Your name, handle, bio, avatar, saved spots, and reviews are stored on this device.")
                 infoRow(icon: "lock.open", title: "No device lock yet", detail: "Perch does not currently add password or biometric protection on top of local storage.")
@@ -354,6 +368,18 @@ struct ProfileView: View {
             return "Add a spot or review to build your profile"
         }
         return "\(store.userSpots.count) spots shared • \(reviewStore.reviews.count) reviews written"
+    }
+
+    private var mapsAppPreferenceBinding: Binding<MapsAppPreference> {
+        Binding(
+            get: { profileStore.profile.mapsAppPreference },
+            set: { preference in
+                profileStore.update { saved in
+                    saved.mapsAppPreference = preference
+                }
+                profile = profileStore.profile
+            }
+        )
     }
 
     private func sectionTitle(_ title: String) -> some View {

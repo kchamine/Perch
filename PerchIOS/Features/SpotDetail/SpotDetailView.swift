@@ -13,6 +13,7 @@ struct SpotDetailView: View {
 
     @State private var showEditSheet = false
     @State private var showReviewComposer = false
+    @State private var showMapsFallbackNotice = false
     @State private var pendingDeletionID: UUID?
     @State private var reviewTitle = ""
     @State private var reviewNote = ""
@@ -115,7 +116,13 @@ struct SpotDetailView: View {
                         .foregroundStyle(PerchTheme.primary)
 
                         Button {
-                            NavigationService.openDirections(for: currentSpot)
+                            let result = NavigationService.openDirections(
+                                for: currentSpot,
+                                using: profileStore.profile.mapsAppPreference
+                            )
+                            if result == .fellBackToAppleMaps {
+                                showMapsFallbackNotice = true
+                            }
                         } label: {
                             HStack(spacing: 8) {
                                 Text("Get Directions")
@@ -161,6 +168,11 @@ struct SpotDetailView: View {
             }
         } message: {
             Text("This review will be permanently removed.")
+        }
+        .alert("Opened Apple Maps", isPresented: $showMapsFallbackNotice) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Google Maps isn't installed, so we opened Apple Maps instead.")
         }
         .sheet(isPresented: $showEditSheet) {
             AddSpotView(editingSpot: currentSpot)

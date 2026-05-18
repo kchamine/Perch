@@ -16,6 +16,7 @@ struct UserProfile: Codable, Equatable {
     var avatarSymbol: String
     var perchStyle: String
     var favoriteMoment: String
+    var mapsAppPreference: MapsAppPreference
 
     static let `default` = UserProfile(
         displayName: "Local Perch Keeper",
@@ -29,7 +30,8 @@ struct UserProfile: Codable, Equatable {
         avatarImagePath: "",
         avatarSymbol: "leaf.circle.fill",
         perchStyle: "Quiet benches, soft light, easy coffee escapes.",
-        favoriteMoment: "Late afternoon reset"
+        favoriteMoment: "Late afternoon reset",
+        mapsAppPreference: .appleMaps
     )
 
     init(
@@ -44,7 +46,8 @@ struct UserProfile: Codable, Equatable {
         avatarImagePath: String,
         avatarSymbol: String,
         perchStyle: String,
-        favoriteMoment: String
+        favoriteMoment: String,
+        mapsAppPreference: MapsAppPreference = .appleMaps
     ) {
         self.displayName = displayName
         self.username = Self.sanitizedHandle(username)
@@ -58,6 +61,7 @@ struct UserProfile: Codable, Equatable {
         self.avatarSymbol = avatarSymbol
         self.perchStyle = perchStyle
         self.favoriteMoment = favoriteMoment
+        self.mapsAppPreference = mapsAppPreference
     }
 
     init(from decoder: Decoder) throws {
@@ -76,6 +80,7 @@ struct UserProfile: Codable, Equatable {
         avatarSymbol = try container.decodeIfPresent(String.self, forKey: .avatarSymbol) ?? UserProfile.default.avatarSymbol
         perchStyle = try container.decodeIfPresent(String.self, forKey: .perchStyle) ?? UserProfile.default.perchStyle
         favoriteMoment = try container.decodeIfPresent(String.self, forKey: .favoriteMoment) ?? UserProfile.default.favoriteMoment
+        mapsAppPreference = try container.decodeIfPresent(MapsAppPreference.self, forKey: .mapsAppPreference) ?? UserProfile.default.mapsAppPreference
 
         try Self.consumeLegacyAccountResidue(from: decoder)
     }
@@ -94,6 +99,7 @@ struct UserProfile: Codable, Equatable {
         try container.encode(avatarSymbol, forKey: .avatarSymbol)
         try container.encode(perchStyle, forKey: .perchStyle)
         try container.encode(favoriteMoment, forKey: .favoriteMoment)
+        try container.encode(mapsAppPreference, forKey: .mapsAppPreference)
     }
 
     var reviewAuthorName: String {
@@ -182,11 +188,26 @@ extension UserProfile {
         case avatarSymbol
         case perchStyle
         case favoriteMoment
+        case mapsAppPreference
     }
 
     private enum LegacyCodingKeys: String, CodingKey {
         case passwordHint
         case allowOfflineLock
+    }
+}
+
+enum MapsAppPreference: String, Codable, CaseIterable, Identifiable {
+    case appleMaps
+    case googleMaps
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .appleMaps: "Apple Maps"
+        case .googleMaps: "Google Maps"
+        }
     }
 }
 
