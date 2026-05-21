@@ -1,0 +1,5 @@
+// Perch Supabase client configuration.
+// Do not commit real anon or service-role keys here.
+
+SUPABASE_URL = https:/$()/vuvtavravnenbemrgloy.supabase.co
+SUPABASE_ANON_KEY =

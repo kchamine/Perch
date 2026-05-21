@@ -43,6 +43,8 @@
 		A0010001000000000000001F /* ReviewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011001000000000000001F /* ReviewStore.swift */; };
 		A00100010000000000000020 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000020 /* ProfileView.swift */; };
 		A00100010000000000000021 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000021 /* OnboardingView.swift */; };
+		A00100010000000000000022 /* SupabaseClientProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000022 /* SupabaseClientProvider.swift */; };
+		A00100010000000000000023 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = A00180010000000000000002 /* Supabase */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -79,6 +81,8 @@
 		A0011001000000000000001F /* ReviewStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewStore.swift; sourceTree = "<group>"; };
 		A00110010000000000000020 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		A00110010000000000000021 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		A00110010000000000000022 /* SupabaseClientProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseClientProvider.swift; sourceTree = "<group>"; };
+		A00110010000000000000023 /* Supabase.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Supabase.xcconfig; sourceTree = "<group>"; };
 		B00110010000000000000001 /* SpotStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotStoreTests.swift; sourceTree = "<group>"; };
 		B00110010000000000000002 /* FavoritesStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesStoreTests.swift; sourceTree = "<group>"; };
 		B00110010000000000000003 /* ReviewStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewStoreTests.swift; sourceTree = "<group>"; };
@@ -91,6 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A00100010000000000000023 /* Supabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,6 +128,7 @@
 				A00130010000000000000005 /* Data */,
 				A00130010000000000000006 /* Features */,
 				A00130010000000000000007 /* Services */,
+				A0013001000000000000000F /* Config */,
 				A00130010000000000000008 /* Resources */,
 				A00110010000000000000017 /* Info.plist */,
 			);
@@ -201,8 +207,17 @@
 				A00110010000000000000009 /* ImageStore.swift */,
 				A0011001000000000000000A /* LocationManager.swift */,
 				A0011001000000000000000B /* NavigationService.swift */,
+				A00110010000000000000022 /* SupabaseClientProvider.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		A0013001000000000000000F /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				A00110010000000000000023 /* Supabase.xcconfig */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 		A00130010000000000000008 /* Resources */ = {
@@ -277,6 +292,9 @@
 			);
 			name = PerchIOS;
 			productName = PerchIOS;
+			packageProductDependencies = (
+				A00180010000000000000002 /* Supabase */,
+			);
 			productReference = A00110010000000000000018 /* PerchIOS.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -326,6 +344,9 @@
 			);
 			mainGroup = A00130010000000000000001;
 			productRefGroup = A00130010000000000000003 /* Products */;
+			packageReferences = (
+				A00180010000000000000001 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -387,6 +408,7 @@
 				A00100010000000000000009 /* ImageStore.swift in Sources */,
 				A0010001000000000000000A /* LocationManager.swift in Sources */,
 				A0010001000000000000000B /* NavigationService.swift in Sources */,
+				A00100010000000000000022 /* SupabaseClientProvider.swift in Sources */,
 				A0010001000000000000000C /* ExploreView.swift in Sources */,
 				A0010001000000000000000D /* FilterSheetView.swift in Sources */,
 				A0010001000000000000000E /* SpotCardView.swift in Sources */,
@@ -418,6 +440,7 @@
 /* Begin XCBuildConfiguration section */
 		A00170010000000000000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A00110010000000000000023 /* Supabase.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -445,6 +468,7 @@
 		};
 		A00170010000000000000002 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A00110010000000000000023 /* Supabase.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -582,6 +606,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A00180010000000000000001 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.46.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A00180010000000000000002 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A00180010000000000000001 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A00160010000000000000001 /* Project object */;
 }

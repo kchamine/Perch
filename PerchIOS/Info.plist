@@ -39,5 +39,9 @@
     <string>Perch uses your location to show nearby sit-worthy public pause spots.</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Perch lets you attach a photo when you add a local spot.</string>
+    <key>SUPABASE_URL</key>
+    <string>$(SUPABASE_URL)</string>
+    <key>SUPABASE_ANON_KEY</key>
+    <string>$(SUPABASE_ANON_KEY)</string>
 </dict>
 </plist>
