@@ -25,7 +25,7 @@ final class FavoritesStoreTests: XCTestCase {
             latitude: 37.7,
             longitude: -122.4,
             photoName: nil,
-            userPhotoPath: nil,
+            photoURL: nil,
             spotType: .bench,
             seatingType: .bench,
             hasSeating: true,

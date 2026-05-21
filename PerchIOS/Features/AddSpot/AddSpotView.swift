@@ -4,9 +4,11 @@ import UIKit
 
 struct AddSpotView: View {
     let editingSpot: Spot?
+    private let imageStorage: ImageStorageProviding?
 
-    init(editingSpot: Spot? = nil) {
+    init(editingSpot: Spot? = nil, imageStorage: ImageStorageProviding? = SupabaseImageStorage.shared) {
         self.editingSpot = editingSpot
+        self.imageStorage = imageStorage
     }
 
     @EnvironmentObject private var store: SpotStore
@@ -42,11 +44,9 @@ struct AddSpotView: View {
     @State private var isSaving = false
     @State private var isLoadingPhoto = false
     @State private var isShowingCropper = false
-    @State private var existingPhotoPath: String?
+    @State private var existingPhotoURL: String?
     @State private var newPhotoSelected = false
     @FocusState private var focusedField: Field?
-
-    private let imageStore = ImageStore()
 
     private enum Field: Hashable {
         case name
@@ -402,30 +402,52 @@ struct AddSpotView: View {
                             }
                             .padding(16)
                         }
-                } else {
-                    VStack(spacing: 8) {
-                        Image(systemName: "camera.fill")
-                            .font(.system(size: 34))
-                            .foregroundStyle(PerchTheme.primary)
-                        Text("Add a photo")
-                            .font(PerchTheme.headline(28))
-                            .foregroundStyle(PerchTheme.primary)
-                        Text(isLoadingPhoto ? "Loading photo..." : "Required — every posted perch needs a real photo")
-                            .font(PerchTheme.label(11, weight: .bold))
-                            .textCase(.uppercase)
-                            .tracking(1.1)
-                            .foregroundStyle(.secondary)
-                        if isLoadingPhoto {
-                            ProgressView()
-                                .tint(PerchTheme.primary)
-                                .padding(.top, 6)
+                } else if let existingPhotoURL, let url = URL(string: existingPhotoURL) {
+                    AsyncImage(url: url) { phase in
+                        switch phase {
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        case .failure:
+                            photoPlaceholder(text: "Couldn't load saved photo")
+                        case .empty:
+                            photoPlaceholder(text: "Loading saved photo...")
+                        @unknown default:
+                            photoPlaceholder(text: "Loading saved photo...")
                         }
                     }
+                    .frame(height: 280)
+                    .frame(maxWidth: .infinity)
+                    .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+                } else {
+                    photoPlaceholder(text: isLoadingPhoto ? "Loading photo..." : "Required — every posted perch needs a real photo")
                 }
             }
         }
         .id(photoPickerSessionID)
-        .disabled(isLoadingPhoto)
+        .disabled(isLoadingPhoto || isSaving)
+    }
+
+    private func photoPlaceholder(text: String) -> some View {
+        VStack(spacing: 8) {
+            Image(systemName: "camera.fill")
+                .font(.system(size: 34))
+                .foregroundStyle(PerchTheme.primary)
+            Text("Add a photo")
+                .font(PerchTheme.headline(28))
+                .foregroundStyle(PerchTheme.primary)
+            Text(text)
+                .font(PerchTheme.label(11, weight: .bold))
+                .textCase(.uppercase)
+                .tracking(1.1)
+                .foregroundStyle(.secondary)
+            if isLoadingPhoto {
+                ProgressView()
+                    .tint(PerchTheme.primary)
+                    .padding(.top, 6)
+            }
+        }
     }
 
     private func editorialBlock<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {
@@ -593,7 +615,7 @@ struct AddSpotView: View {
         !isSaving && validationMessage == nil
     }
 
-    private var hasPhoto: Bool { selectedUIImage != nil || existingPhotoPath != nil }
+    private var hasPhoto: Bool { selectedUIImage != nil || existingPhotoURL != nil }
 
     private var validationMessage: String? {
         if trimmedName.isEmpty { return "Add a perch name before posting." }
@@ -649,12 +671,14 @@ struct AddSpotView: View {
 
         do {
             if let original = editingSpot {
-                let photoPath: String?
+                let photoURL: String?
                 if newPhotoSelected {
-                    photoPath = try imageStore.saveImage(selectedUIImage)
-                    imageStore.deleteImage(atPath: existingPhotoPath)
+                    photoURL = try await uploadSelectedSpotPhoto()
+                    if let existingPhotoURL {
+                        try await imageStorageOrThrow().deleteImage(at: existingPhotoURL)
+                    }
                 } else {
-                    photoPath = existingPhotoPath
+                    photoURL = existingPhotoURL
                 }
                 let updated = Spot(
                     id: original.id,
@@ -663,7 +687,7 @@ struct AddSpotView: View {
                     latitude: latitude,
                     longitude: longitude,
                     photoName: nil,
-                    userPhotoPath: photoPath,
+                    photoURL: photoURL,
                     spotType: spotType,
                     seatingType: seatingType,
                     hasSeating: hasSeating,
@@ -684,7 +708,7 @@ struct AddSpotView: View {
                 store.update(updated)
                 dismiss()
             } else {
-                let savedPath = try imageStore.saveImage(selectedUIImage)
+                let photoURL = try await uploadSelectedSpotPhoto()
                 let spot = Spot(
                     id: UUID(),
                     name: trimmedName,
@@ -692,7 +716,7 @@ struct AddSpotView: View {
                     latitude: latitude,
                     longitude: longitude,
                     photoName: nil,
-                    userPhotoPath: savedPath,
+                    photoURL: photoURL,
                     spotType: spotType,
                     seatingType: seatingType,
                     hasSeating: hasSeating,
@@ -740,12 +764,7 @@ struct AddSpotView: View {
         isPrivate = spot.isPrivate
         latitude = spot.latitude
         longitude = spot.longitude
-        existingPhotoPath = spot.userPhotoPath
-        if let path = spot.userPhotoPath,
-           let data = imageStore.imageData(for: path),
-           let image = UIImage(data: data) {
-            selectedUIImage = image
-        }
+        existingPhotoURL = spot.photoURL
     }
 
     private func resetForm(keepingLocation: Bool) {
@@ -797,5 +816,20 @@ struct AddSpotView: View {
         cropSourceImage = nil
         isShowingCropper = false
         isLoadingPhoto = false
+    }
+
+    private func uploadSelectedSpotPhoto() async throws -> String {
+        guard let data = selectedUIImage?.jpegData(compressionQuality: 0.85) else {
+            throw SupabaseImageStorageError.imageEncodingFailed
+        }
+
+        return try await imageStorageOrThrow().uploadSpotPhoto(data)
+    }
+
+    private func imageStorageOrThrow() throws -> ImageStorageProviding {
+        guard let imageStorage else {
+            throw SupabaseImageStorageError.notConfigured
+        }
+        return imageStorage
     }
 }

@@ -12,8 +12,6 @@ struct ProfileView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var profile: UserProfile = .default
-    @State private var avatarImage: UIImage?
-    @State private var isLoadingAvatar = false
     @State private var isShowingEditProfile = false
     @State private var pendingDeletionID: UUID?
     @State private var isConfirmingSignOut = false
@@ -107,7 +105,6 @@ struct ProfileView: View {
             }
             .task {
                 refreshProfileFromStore()
-                await loadAvatar()
             }
             .alert("Delete review?", isPresented: Binding(
                 get: { pendingDeletionID != nil },
@@ -136,13 +133,11 @@ struct ProfileView: View {
             .sheet(isPresented: $isShowingEditProfile) {
                 EditProfileView(
                     startingProfile: profileStore.profile,
-                    startingAvatarImage: avatarImage,
-                    onSave: { updatedProfile, updatedAvatarImage in
+                    onSave: { updatedProfile in
                         profileStore.update { saved in
                             saved = updatedProfile.normalized
                         }
                         profile = profileStore.profile
-                        avatarImage = updatedAvatarImage
                     }
                 )
             }
@@ -184,7 +179,7 @@ struct ProfileView: View {
             TagFlowLayout(spacing: 8, rowSpacing: 8) {
                 InlineTag(icon: "sparkles", text: trimmed(profile.favoriteMoment, fallback: UserProfile.default.favoriteMoment), tint: PerchTheme.primary)
                 InlineTag(icon: "leaf", text: trimmed(profile.perchStyle, fallback: UserProfile.default.perchStyle), tint: PerchTheme.primarySoft)
-                InlineTag(icon: "internaldrive", text: "Local-only profile", tint: PerchTheme.textMuted)
+                InlineTag(icon: "person.crop.circle.badge.checkmark", text: "Signed-in profile", tint: PerchTheme.textMuted)
             }
 
             HStack(spacing: 10) {
@@ -248,14 +243,14 @@ struct ProfileView: View {
     private var activityOverviewCard: some View {
         VStack(alignment: .leading, spacing: 14) {
             sectionTitle("What lives here")
-            Text("Perch still works local-first. Your profile, saved spots, reviews, and avatar all stay on this device until real account sync exists.")
+            Text("Perch still keeps profile details and activity local for now, while photos and avatars are backed by Supabase Storage.")
                 .font(.subheadline)
                 .foregroundStyle(PerchTheme.textMuted)
                 .lineSpacing(3)
 
             VStack(spacing: 10) {
                 infoRow(icon: "person.text.rectangle", title: "Identity", detail: "Name, handle, bio, home area, and perch taste live here and can be edited from the dedicated Edit Profile screen.")
-                infoRow(icon: "photo", title: "Avatar", detail: "Pick a local photo or keep a simple perch icon when you edit the profile.")
+                infoRow(icon: "photo", title: "Avatar", detail: "Pick a photo that uploads to Storage, or keep a simple perch icon.")
                 infoRow(icon: "square.and.arrow.down", title: "Activity", detail: "Added spots, saved places, and reviews reflect actual local app data.")
             }
         }
@@ -342,14 +337,14 @@ struct ProfileView: View {
                 }
             }
 
-            settingsGroup(title: "Local data & privacy", subtitle: "Truthful controls for what stays on this device today") {
-                infoRow(icon: "internaldrive", title: "Profile data stays local", detail: "Your name, handle, bio, avatar, saved spots, and reviews are stored on this device.")
+            settingsGroup(title: "Data & privacy", subtitle: "Truthful controls for what stays on this device today") {
+                infoRow(icon: "internaldrive", title: "Profile details stay local", detail: "Your name, handle, bio, saved spots, and reviews are stored on this device today. Custom photos upload to Supabase Storage.")
                 infoRow(icon: "lock.open", title: "No device lock yet", detail: "Perch does not currently add password or biometric protection on top of local storage.")
                 infoRow(icon: "arrow.triangle.2.circlepath", title: "No sync yet", detail: "There is no cross-device backup or cloud account connected to this profile right now.")
             }
 
             settingsGroup(title: "About & local-first status", subtitle: "What this profile experience is designed to be in Perch 1.0") {
-                infoRow(icon: "person.text.rectangle", title: "A real local profile", detail: "This surface is meant to help you track identity, taste, and activity without pretending backend accounts already exist.")
+                infoRow(icon: "person.text.rectangle", title: "A real profile", detail: "This surface is meant to help you track identity, taste, and activity while backend sync comes online in pieces.")
                 infoRow(icon: "sparkles", title: "Contribution-first", detail: "Your added spots, saved places, and reviews drive the profile stats and activity sections above.")
                 infoRow(icon: "shippingbox", title: "Future-ready shape", detail: "The structure is organized so Perch can map into real sync and auth later without fake product theater today.")
             }
@@ -662,23 +657,31 @@ struct ProfileView: View {
                 .fill(PerchTheme.accent)
                 .frame(width: size, height: size)
 
-            if let avatarImage {
-                Image(uiImage: avatarImage)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: size, height: size)
-                    .clipShape(Circle())
+            if let avatarURL = URL(string: profile.avatarURL), profile.hasCustomAvatar {
+                AsyncImage(url: avatarURL) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    case .empty:
+                        ProgressView()
+                            .tint(PerchTheme.primary)
+                    case .failure:
+                        Image(systemName: profile.avatarSymbol)
+                            .font(.system(size: size * 0.42, weight: .semibold))
+                            .foregroundStyle(PerchTheme.primary)
+                    @unknown default:
+                        ProgressView()
+                            .tint(PerchTheme.primary)
+                    }
+                }
+                .frame(width: size, height: size)
+                .clipShape(Circle())
             } else {
                 Image(systemName: profile.avatarSymbol)
                     .font(.system(size: size * 0.42, weight: .semibold))
                     .foregroundStyle(PerchTheme.primary)
-            }
-
-            if isLoadingAvatar {
-                ProgressView()
-                    .tint(PerchTheme.primary)
-                    .padding(8)
-                    .background(.ultraThinMaterial, in: Circle())
             }
         }
         .overlay(
@@ -689,24 +692,6 @@ struct ProfileView: View {
 
     private func refreshProfileFromStore() {
         profile = profileStore.profile
-    }
-
-    private func loadAvatar() async {
-        let path = profileStore.profile.avatarImagePath.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !path.isEmpty else {
-            await MainActor.run {
-                avatarImage = nil
-                isLoadingAvatar = false
-            }
-            return
-        }
-
-        await MainActor.run { isLoadingAvatar = true }
-        let image = await Task.detached(priority: .userInitiated) { UIImage(contentsOfFile: path) }.value
-        await MainActor.run {
-            avatarImage = image
-            isLoadingAvatar = false
-        }
     }
 
     private func reviewCountText(for spotID: UUID) -> String {
@@ -740,6 +725,7 @@ struct ProfileView: View {
 }
 
 private struct EditProfileView: View {
+    @EnvironmentObject private var authStore: AuthStore
     @Environment(\.dismiss) private var dismiss
 
     @State private var draft: UserProfile
@@ -747,12 +733,14 @@ private struct EditProfileView: View {
     @State private var avatarImage: UIImage?
     @State private var pendingAvatarImage: UIImage?
     @State private var isLoadingAvatar = false
+    @State private var isSavingProfile = false
     @State private var isUsingIconAvatar = false
+    @State private var avatarError: String?
     @State private var activeLongField: EditProfileLongField?
 
-    private let imageStore = ImageStore()
-    private let originalAvatarPath: String
-    private let onSave: (UserProfile, UIImage?) -> Void
+    private let imageStorage: ImageStorageProviding?
+    private let originalAvatarURL: String
+    private let onSave: (UserProfile) -> Void
     private let avatarSymbols = [
         "leaf.circle.fill",
         "binoculars.fill",
@@ -764,13 +752,13 @@ private struct EditProfileView: View {
 
     init(
         startingProfile: UserProfile,
-        startingAvatarImage: UIImage?,
-        onSave: @escaping (UserProfile, UIImage?) -> Void
+        imageStorage: ImageStorageProviding? = SupabaseImageStorage.shared,
+        onSave: @escaping (UserProfile) -> Void
     ) {
         _draft = State(initialValue: startingProfile)
-        _avatarImage = State(initialValue: startingAvatarImage)
         _isUsingIconAvatar = State(initialValue: !startingProfile.hasCustomAvatar)
-        self.originalAvatarPath = startingProfile.avatarImagePath
+        self.imageStorage = imageStorage
+        self.originalAvatarURL = startingProfile.avatarURL
         self.onSave = onSave
     }
 
@@ -799,15 +787,18 @@ private struct EditProfileView: View {
 
                 Section("Avatar") {
                     PhotosPicker(selection: $avatarPickerItem, matching: .images) {
-                        Label(isLoadingAvatar ? "Loading photo..." : "Choose local photo", systemImage: "photo.badge.plus")
+                        Label(isLoadingAvatar ? "Loading photo..." : "Choose photo", systemImage: "photo.badge.plus")
                     }
+                    .disabled(isSavingProfile)
 
                     if !isUsingIconAvatar || pendingAvatarImage != nil {
                         Button("Use icon instead", role: .destructive) {
                             pendingAvatarImage = nil
                             avatarImage = nil
                             isUsingIconAvatar = true
+                            avatarError = nil
                         }
+                        .disabled(isSavingProfile)
                     }
 
                     Picker("Icon", selection: $draft.avatarSymbol) {
@@ -819,6 +810,12 @@ private struct EditProfileView: View {
                     Text(avatarStatusText)
                         .font(.footnote)
                         .foregroundStyle(.secondary)
+
+                    if let avatarError {
+                        Text(avatarError)
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(.red)
+                    }
                 }
 
                 Section("Identity") {
@@ -876,16 +873,18 @@ private struct EditProfileView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Cancel") { dismiss() }
+                        .disabled(isSavingProfile)
                 }
 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Save") {
-                        saveProfile()
+                        Task { await saveProfile() }
                     }
                     .fontWeight(.semibold)
+                    .disabled(isSavingProfile)
                 }
             }
-            .interactiveDismissDisabled(isLoadingAvatar)
+            .interactiveDismissDisabled(isLoadingAvatar || isSavingProfile)
             .sheet(item: $activeLongField) { field in
                 LongTextEditorView(
                     title: field.title,
@@ -908,10 +907,10 @@ private struct EditProfileView: View {
 
     private var avatarStatusText: String {
         if pendingAvatarImage != nil {
-            return "The new photo is still a draft. It only replaces your saved avatar when you tap Save."
+            return "The new photo uploads and replaces your saved avatar when you tap Save."
         }
         if isUsingIconAvatar {
-            return "You’re currently using an icon avatar. Choosing a local photo stays in draft until Save."
+            return "You’re currently using an icon avatar. Choosing a photo keeps it in draft until Save."
         }
         return "Your current saved avatar stays in place unless you save a new photo or switch back to an icon."
     }
@@ -992,6 +991,25 @@ private struct EditProfileView: View {
                     .scaledToFill()
                     .frame(width: size, height: size)
                     .clipShape(Circle())
+            } else if let avatarURL = URL(string: draft.avatarURL), draft.hasCustomAvatar, !isUsingIconAvatar {
+                AsyncImage(url: avatarURL) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    case .empty:
+                        ProgressView()
+                    case .failure:
+                        Image(systemName: draft.avatarSymbol)
+                            .font(.system(size: size * 0.42, weight: .semibold))
+                            .foregroundStyle(PerchTheme.primary)
+                    @unknown default:
+                        ProgressView()
+                    }
+                }
+                .frame(width: size, height: size)
+                .clipShape(Circle())
             } else {
                 Image(systemName: draft.avatarSymbol)
                     .font(.system(size: size * 0.42, weight: .semibold))
@@ -1003,33 +1021,55 @@ private struct EditProfileView: View {
                     .padding(8)
                     .background(.ultraThinMaterial, in: Circle())
             }
+
+            if isSavingProfile {
+                ProgressView()
+                    .padding(8)
+                    .background(.ultraThinMaterial, in: Circle())
+            }
         }
     }
 
-    private func saveProfile() {
+    @MainActor
+    private func saveProfile() async {
+        guard !isSavingProfile else { return }
+
+        isSavingProfile = true
+        avatarError = nil
+        defer { isSavingProfile = false }
+
         var savedProfile = draft.normalized
         savedProfile.updatedAt = .now
 
-        let resolvedAvatarImage: UIImage?
-        if let pendingAvatarImage {
-            if let savedPath = try? imageStore.saveImage(pendingAvatarImage) {
-                savedProfile.avatarImagePath = savedPath
-                resolvedAvatarImage = pendingAvatarImage
-            } else {
-                savedProfile.avatarImagePath = originalAvatarPath
-                resolvedAvatarImage = avatarImage
-            }
-        } else if isUsingIconAvatar {
-            savedProfile.avatarImagePath = ""
-            resolvedAvatarImage = nil
-        } else {
-            savedProfile.avatarImagePath = originalAvatarPath
-            resolvedAvatarImage = avatarImage
-        }
+        do {
+            if let pendingAvatarImage {
+                guard let userID = authStore.currentUser?.id else {
+                    throw SupabaseImageStorageError.unauthenticated
+                }
+                guard let data = pendingAvatarImage.jpegData(compressionQuality: 0.85) else {
+                    throw SupabaseImageStorageError.imageEncodingFailed
+                }
 
-        avatarPickerItem = nil
-        onSave(savedProfile, resolvedAvatarImage)
-        dismiss()
+                let newURL = try await imageStorageOrThrow().uploadAvatar(data, for: userID)
+                savedProfile.avatarURL = newURL
+                if !originalAvatarURL.isEmpty {
+                    try await imageStorageOrThrow().deleteImage(at: originalAvatarURL)
+                }
+            } else if isUsingIconAvatar {
+                savedProfile.avatarURL = ""
+                if !originalAvatarURL.isEmpty {
+                    try await imageStorageOrThrow().deleteImage(at: originalAvatarURL)
+                }
+            } else {
+                savedProfile.avatarURL = originalAvatarURL
+            }
+
+            avatarPickerItem = nil
+            onSave(savedProfile)
+            dismiss()
+        } catch {
+            avatarError = error.localizedDescription
+        }
     }
 
     @MainActor
@@ -1046,9 +1086,17 @@ private struct EditProfileView: View {
             pendingAvatarImage = image
             avatarImage = image
             isUsingIconAvatar = false
+            avatarError = nil
         } catch {
             return
         }
+    }
+
+    private func imageStorageOrThrow() throws -> ImageStorageProviding {
+        guard let imageStorage else {
+            throw SupabaseImageStorageError.notConfigured
+        }
+        return imageStorage
     }
 
     private func symbolLabel(for symbol: String) -> String {

@@ -1,5 +1,4 @@
 import SwiftUI
-import UIKit
 
 struct SeedOrUserPhotoView: View {
     enum Style {
@@ -11,12 +10,13 @@ struct SeedOrUserPhotoView: View {
     let spot: Spot
     var style: Style = .editorial
 
-    @State private var displayImage: UIImage?
-    @State private var isLoadingUserImage = false
-
     var imageAspectRatio: CGFloat? {
-        guard let displayImage, displayImage.size.height > 0 else { return nil }
-        return displayImage.size.width / displayImage.size.height
+        nil
+    }
+
+    private var photoURL: URL? {
+        guard let value = spot.photoURL else { return nil }
+        return URL(string: value)
     }
 
     var body: some View {
@@ -32,9 +32,6 @@ struct SeedOrUserPhotoView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .clipped()
-        .task(id: spot.userPhotoPath) {
-            await loadUserImage()
-        }
     }
 
     private var editorialBody: some View {
@@ -57,22 +54,20 @@ struct SeedOrUserPhotoView: View {
                         .padding(14)
                 }
 
-                Spacer(minLength: displayImage == nil ? 0 : 8)
+                Spacer(minLength: photoURL == nil ? 0 : 8)
 
-                if let displayImage {
-                    Image(uiImage: displayImage)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 138)
-                        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                                .stroke(.white.opacity(0.18), lineWidth: 1)
-                        }
-                        .shadow(color: .black.opacity(0.18), radius: 16, y: 8)
-                        .padding(.horizontal, 14)
-                        .padding(.bottom, 10)
+                if let photoURL {
+                    remotePhoto(url: photoURL, mode: .fill)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 138)
+                    .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 22, style: .continuous)
+                            .stroke(.white.opacity(0.18), lineWidth: 1)
+                    }
+                    .shadow(color: .black.opacity(0.18), radius: 16, y: 8)
+                    .padding(.horizontal, 14)
+                    .padding(.bottom, 10)
                 }
 
                 HStack {
@@ -97,71 +92,58 @@ struct SeedOrUserPhotoView: View {
                     )
                 )
             }
-
-            if isLoadingUserImage {
-                ProgressView()
-                    .tint(.white)
-                    .padding()
-                    .background(.ultraThinMaterial, in: Circle())
-            }
         }
     }
 
     private var photoOnlyBody: some View {
         ZStack {
-            if let displayImage {
-                Image(uiImage: displayImage)
-                    .resizable()
-                    .scaledToFill()
+            if let photoURL {
+                remotePhoto(url: photoURL, mode: .fill)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .clipped()
             } else {
                 seedGradient
-            }
-
-            if isLoadingUserImage {
-                ProgressView()
-                    .tint(.white)
-                    .padding()
-                    .background(.ultraThinMaterial, in: Circle())
             }
         }
     }
 
     private var photoFitBody: some View {
         ZStack {
-            Color.black.opacity(displayImage == nil ? 0 : 1)
+            Color.black.opacity(photoURL == nil ? 0 : 1)
 
-            if let displayImage {
-                Image(uiImage: displayImage)
-                    .resizable()
-                    .scaledToFit()
+            if let photoURL {
+                remotePhoto(url: photoURL, mode: .fit)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-
-            if isLoadingUserImage {
-                ProgressView()
-                    .tint(.white)
-                    .padding()
-                    .background(.ultraThinMaterial, in: Circle())
             }
         }
     }
 
-    private func loadUserImage() async {
-        guard let path = spot.userPhotoPath else {
-            isLoadingUserImage = false
-            displayImage = nil
-            return
-        }
+    private enum RemotePhotoMode {
+        case fill
+        case fit
+    }
 
-        isLoadingUserImage = true
-        let image: UIImage? = await Task.detached(priority: .userInitiated) { () -> UIImage? in
-            guard let data = FileManager.default.contents(atPath: path) else { return nil }
-            return UIImage(data: data)
-        }.value
-        displayImage = image
-        isLoadingUserImage = false
+    private func remotePhoto(url: URL, mode: RemotePhotoMode) -> some View {
+        AsyncImage(url: url) { phase in
+            switch phase {
+            case .success(let image):
+                switch mode {
+                case .fill:
+                    image.resizable().scaledToFill()
+                case .fit:
+                    image.resizable().scaledToFit()
+                }
+            case .empty:
+                ProgressView()
+                    .tint(.white)
+                    .padding()
+                    .background(.ultraThinMaterial, in: Circle())
+            case .failure:
+                seedGradient
+            @unknown default:
+                seedGradient
+            }
+        }
     }
 
     private var seedGradient: some View {

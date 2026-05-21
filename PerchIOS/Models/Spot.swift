@@ -8,7 +8,7 @@ struct Spot: Identifiable, Hashable {
     var latitude: Double
     var longitude: Double
     var photoName: String?
-    var userPhotoPath: String?
+    var photoURL: String?
     var spotType: SpotType
     var seatingType: SeatingType
     var hasSeating: Bool
@@ -38,7 +38,7 @@ struct Spot: Identifiable, Hashable {
 
 extension Spot: Codable {
     enum CodingKeys: String, CodingKey {
-        case id, name, subtitle, latitude, longitude, photoName, userPhotoPath
+        case id, name, subtitle, latitude, longitude, photoName, photoURL, photoURLSnake = "photo_url", userPhotoPath
         case spotType, seatingType, hasSeating, shadeLevel, noiseLevel, crowdLevel
         case viewType, bestTime, accessibility, accessEffort, comfortRating, scenicRating
         case publicAccessConfirmed, isPrivate, notes, lastConfirmed
@@ -52,7 +52,9 @@ extension Spot: Codable {
         latitude = try container.decode(Double.self, forKey: .latitude)
         longitude = try container.decode(Double.self, forKey: .longitude)
         photoName = try container.decodeIfPresent(String.self, forKey: .photoName)
-        userPhotoPath = try container.decodeIfPresent(String.self, forKey: .userPhotoPath)
+        photoURL = try container.decodeIfPresent(String.self, forKey: .photoURL)
+            ?? container.decodeIfPresent(String.self, forKey: .photoURLSnake)
+            ?? container.decodeIfPresent(String.self, forKey: .userPhotoPath)
         spotType = try container.decode(SpotType.self, forKey: .spotType)
         seatingType = try container.decode(SeatingType.self, forKey: .seatingType)
         hasSeating = try container.decode(Bool.self, forKey: .hasSeating)
@@ -69,6 +71,33 @@ extension Spot: Codable {
         isPrivate = try container.decodeIfPresent(Bool.self, forKey: .isPrivate) ?? false
         notes = try container.decode(String.self, forKey: .notes)
         lastConfirmed = try container.decode(Date.self, forKey: .lastConfirmed)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(subtitle, forKey: .subtitle)
+        try container.encode(latitude, forKey: .latitude)
+        try container.encode(longitude, forKey: .longitude)
+        try container.encodeIfPresent(photoName, forKey: .photoName)
+        try container.encodeIfPresent(photoURL, forKey: .photoURL)
+        try container.encode(spotType, forKey: .spotType)
+        try container.encode(seatingType, forKey: .seatingType)
+        try container.encode(hasSeating, forKey: .hasSeating)
+        try container.encode(shadeLevel, forKey: .shadeLevel)
+        try container.encode(noiseLevel, forKey: .noiseLevel)
+        try container.encode(crowdLevel, forKey: .crowdLevel)
+        try container.encode(viewType, forKey: .viewType)
+        try container.encode(bestTime, forKey: .bestTime)
+        try container.encode(accessibility, forKey: .accessibility)
+        try container.encode(accessEffort, forKey: .accessEffort)
+        try container.encode(comfortRating, forKey: .comfortRating)
+        try container.encode(scenicRating, forKey: .scenicRating)
+        try container.encode(publicAccessConfirmed, forKey: .publicAccessConfirmed)
+        try container.encode(isPrivate, forKey: .isPrivate)
+        try container.encode(notes, forKey: .notes)
+        try container.encode(lastConfirmed, forKey: .lastConfirmed)
     }
 }
 

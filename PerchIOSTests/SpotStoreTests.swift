@@ -36,7 +36,7 @@ private func makeSpot(
         latitude: latitude,
         longitude: longitude,
         photoName: nil,
-        userPhotoPath: nil,
+        photoURL: nil,
         spotType: .bench,
         seatingType: .bench,
         hasSeating: true,

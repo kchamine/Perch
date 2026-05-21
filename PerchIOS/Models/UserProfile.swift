@@ -12,7 +12,7 @@ struct UserProfile: Codable, Equatable {
     var defaultReviewName: ReviewDisplayNameMode
     var joinedAt: Date
     var updatedAt: Date
-    var avatarImagePath: String
+    var avatarURL: String
     var avatarSymbol: String
     var perchStyle: String
     var favoriteMoment: String
@@ -27,7 +27,7 @@ struct UserProfile: Codable, Equatable {
         defaultReviewName: .firstNameOnly,
         joinedAt: .now,
         updatedAt: .now,
-        avatarImagePath: "",
+        avatarURL: "",
         avatarSymbol: "leaf.circle.fill",
         perchStyle: "Quiet benches, soft light, easy coffee escapes.",
         favoriteMoment: "Late afternoon reset",
@@ -43,7 +43,7 @@ struct UserProfile: Codable, Equatable {
         defaultReviewName: ReviewDisplayNameMode,
         joinedAt: Date,
         updatedAt: Date,
-        avatarImagePath: String,
+        avatarURL: String,
         avatarSymbol: String,
         perchStyle: String,
         favoriteMoment: String,
@@ -57,7 +57,7 @@ struct UserProfile: Codable, Equatable {
         self.defaultReviewName = defaultReviewName
         self.joinedAt = joinedAt
         self.updatedAt = updatedAt
-        self.avatarImagePath = avatarImagePath
+        self.avatarURL = avatarURL
         self.avatarSymbol = avatarSymbol
         self.perchStyle = perchStyle
         self.favoriteMoment = favoriteMoment
@@ -76,7 +76,10 @@ struct UserProfile: Codable, Equatable {
         defaultReviewName = try container.decodeIfPresent(ReviewDisplayNameMode.self, forKey: .defaultReviewName) ?? UserProfile.default.defaultReviewName
         joinedAt = try container.decodeIfPresent(Date.self, forKey: .joinedAt) ?? .now
         updatedAt = try container.decodeIfPresent(Date.self, forKey: .updatedAt) ?? .now
-        avatarImagePath = try container.decodeIfPresent(String.self, forKey: .avatarImagePath) ?? UserProfile.default.avatarImagePath
+        avatarURL = try container.decodeIfPresent(String.self, forKey: .avatarURL)
+            ?? container.decodeIfPresent(String.self, forKey: .avatarURLSnake)
+            ?? container.decodeIfPresent(String.self, forKey: .avatarImagePath)
+            ?? UserProfile.default.avatarURL
         avatarSymbol = try container.decodeIfPresent(String.self, forKey: .avatarSymbol) ?? UserProfile.default.avatarSymbol
         perchStyle = try container.decodeIfPresent(String.self, forKey: .perchStyle) ?? UserProfile.default.perchStyle
         favoriteMoment = try container.decodeIfPresent(String.self, forKey: .favoriteMoment) ?? UserProfile.default.favoriteMoment
@@ -95,7 +98,7 @@ struct UserProfile: Codable, Equatable {
         try container.encode(defaultReviewName, forKey: .defaultReviewName)
         try container.encode(joinedAt, forKey: .joinedAt)
         try container.encode(updatedAt, forKey: .updatedAt)
-        try container.encode(avatarImagePath, forKey: .avatarImagePath)
+        try container.encode(avatarURL, forKey: .avatarURL)
         try container.encode(avatarSymbol, forKey: .avatarSymbol)
         try container.encode(perchStyle, forKey: .perchStyle)
         try container.encode(favoriteMoment, forKey: .favoriteMoment)
@@ -117,7 +120,7 @@ struct UserProfile: Codable, Equatable {
     }
 
     var hasCustomAvatar: Bool {
-        !avatarImagePath.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        !avatarURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     var normalized: UserProfile {
@@ -184,6 +187,8 @@ extension UserProfile {
         case defaultReviewName
         case joinedAt
         case updatedAt
+        case avatarURL
+        case avatarURLSnake = "avatar_url"
         case avatarImagePath
         case avatarSymbol
         case perchStyle
