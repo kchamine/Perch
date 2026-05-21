@@ -706,6 +706,10 @@ struct AddSpotView: View {
                     lastConfirmed: .now
                 )
                 await store.update(updated)
+                if let error = store.loadError {
+                    saveStateMessage = error
+                    return
+                }
                 dismiss()
             } else {
                 let photoURL = try await uploadSelectedSpotPhoto()
@@ -735,6 +739,11 @@ struct AddSpotView: View {
                     lastConfirmed: .now
                 )
                 await store.addSpot(spot)
+                if let error = store.loadError {
+                    try? await imageStorageOrThrow().deleteImage(at: photoURL)
+                    saveStateMessage = error
+                    return
+                }
                 resetForm(keepingLocation: true)
                 saveStateMessage = nil
                 appState.revealInExplore(spot)
@@ -819,7 +828,7 @@ struct AddSpotView: View {
     }
 
     private func uploadSelectedSpotPhoto() async throws -> String {
-        guard let data = selectedUIImage?.jpegData(compressionQuality: 0.85) else {
+        guard let data = selectedUIImage?.jpegDataForUpload() else {
             throw SupabaseImageStorageError.imageEncodingFailed
         }
 

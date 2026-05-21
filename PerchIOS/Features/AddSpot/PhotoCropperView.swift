@@ -241,4 +241,21 @@ extension UIImage {
             draw(in: CGRect(origin: .zero, size: targetSize))
         }
     }
+
+    func jpegDataForUpload(maxBytes: Int = 4_500_000) -> Data? {
+        let dimensions: [CGFloat] = [2048, 1600, 1200, 900]
+        let qualities: [CGFloat] = [0.85, 0.75, 0.65, 0.55, 0.45]
+
+        for dimension in dimensions {
+            let candidate = downsampled(toFit: dimension).normalizedImage()
+            for quality in qualities {
+                guard let data = candidate.jpegData(compressionQuality: quality) else { continue }
+                if data.count <= maxBytes {
+                    return data
+                }
+            }
+        }
+
+        return downsampled(toFit: 700).normalizedImage().jpegData(compressionQuality: 0.4)
+    }
 }

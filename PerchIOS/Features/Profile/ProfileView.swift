@@ -1072,7 +1072,7 @@ private struct EditProfileView: View {
                 guard let userID = authStore.currentUser?.id else {
                     throw SupabaseImageStorageError.unauthenticated
                 }
-                guard let data = pendingAvatarImage.jpegData(compressionQuality: 0.85) else {
+                guard let data = pendingAvatarImage.jpegDataForUpload() else {
                     throw SupabaseImageStorageError.imageEncodingFailed
                 }
 
