@@ -236,7 +236,9 @@ struct SavedView: View {
     }
 
     private func deleteSpot(_ spot: Spot) {
-        store.deleteUserSpots(ids: Set([spot.id]))
+        Task {
+            await store.deleteUserSpots(ids: Set([spot.id]))
+        }
         favorites.remove(Set([spot.id]))
     }
 }

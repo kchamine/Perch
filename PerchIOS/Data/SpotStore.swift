@@ -30,36 +30,60 @@ final class SpotStore: ObservableObject {
         (seededSpots + userSpots).sorted { $0.name < $1.name }
     }
 
-    func load() {
+    func load() async {
         do {
-            seededSpots = try repository.loadSeededSpots()
-            userSpots = try repository.loadUserSpots()
+            seededSpots = try await repository.loadSeededSpots()
+            userSpots = try await repository.loadUserSpots()
             loadError = nil
         } catch {
             loadError = error.localizedDescription
         }
     }
 
-    func addSpot(_ spot: Spot) {
+    func addSpot(_ spot: Spot) async {
         userSpots.append(spot)
-        persistUserSpots()
+        do {
+            try await repository.addUserSpot(spot)
+            loadError = nil
+        } catch {
+            userSpots.removeAll { $0.id == spot.id }
+            loadError = error.localizedDescription
+        }
     }
 
-    func update(_ spot: Spot) {
+    func update(_ spot: Spot) async {
         guard let index = userSpots.firstIndex(where: { $0.id == spot.id }) else { return }
+        let previousSpot = userSpots[index]
+        let previousSelectedSpot = selectedSpot
         userSpots[index] = spot
         if selectedSpot?.id == spot.id {
             selectedSpot = spot
         }
-        persistUserSpots()
+        do {
+            try await repository.updateUserSpot(spot)
+            loadError = nil
+        } catch {
+            userSpots[index] = previousSpot
+            selectedSpot = previousSelectedSpot
+            loadError = error.localizedDescription
+        }
     }
 
-    func deleteUserSpots(ids: Set<UUID>) {
+    func deleteUserSpots(ids: Set<UUID>) async {
+        let previousUserSpots = userSpots
+        let previousSelectedSpot = selectedSpot
         userSpots.removeAll { ids.contains($0.id) }
         if selectedSpot.map({ ids.contains($0.id) }) == true {
             selectedSpot = nil
         }
-        persistUserSpots()
+        do {
+            try await repository.deleteUserSpots(ids: ids)
+            loadError = nil
+        } catch {
+            userSpots = previousUserSpots
+            selectedSpot = previousSelectedSpot
+            loadError = error.localizedDescription
+        }
     }
 
     func isUserSpot(_ spot: Spot) -> Bool {
@@ -88,11 +112,11 @@ final class SpotStore: ObservableObject {
         }
     }
 
-    private func persistUserSpots() {
-        do {
-            try repository.saveUserSpots(userSpots)
-        } catch {
-            loadError = error.localizedDescription
+    func clearUserSpots() {
+        let currentUserSpotIDs = Set(userSpots.map(\.id))
+        userSpots = []
+        if selectedSpot.map({ currentUserSpotIDs.contains($0.id) }) == true {
+            selectedSpot = nil
         }
     }
 

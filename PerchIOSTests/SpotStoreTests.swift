@@ -7,11 +7,29 @@ import CoreLocation
 final class StubSpotRepository: SpotRepository {
     var seededSpots: [Spot] = []
     var userSpots: [Spot] = []
-    var savedUserSpots: [Spot]?
+    var addedSpots: [Spot] = []
+    var updatedSpots: [Spot] = []
+    var deletedSpotIDs: Set<UUID> = []
 
-    func loadSeededSpots() throws -> [Spot] { seededSpots }
-    func loadUserSpots() throws -> [Spot] { userSpots }
-    func saveUserSpots(_ spots: [Spot]) throws { savedUserSpots = spots }
+    func loadSeededSpots() async throws -> [Spot] { seededSpots }
+    func loadUserSpots() async throws -> [Spot] { userSpots }
+
+    func addUserSpot(_ spot: Spot) async throws {
+        addedSpots.append(spot)
+        userSpots.append(spot)
+    }
+
+    func updateUserSpot(_ spot: Spot) async throws {
+        updatedSpots.append(spot)
+        if let index = userSpots.firstIndex(where: { $0.id == spot.id }) {
+            userSpots[index] = spot
+        }
+    }
+
+    func deleteUserSpots(ids: Set<UUID>) async throws {
+        deletedSpotIDs.formUnion(ids)
+        userSpots.removeAll { ids.contains($0.id) }
+    }
 }
 
 // MARK: - Helpers
@@ -79,169 +97,170 @@ final class SpotStoreTests: XCTestCase {
 
     // MARK: Load
 
-    func testLoadSeededSpots() {
+    func testLoadSeededSpots() async {
         let spot = makeSpot(name: "Seeded")
         repository.seededSpots = [spot]
-        store.load()
+        await store.load()
         XCTAssertEqual(store.seededSpots.count, 1)
         XCTAssertEqual(store.seededSpots[0].name, "Seeded")
     }
 
-    func testLoadUserSpots() {
+    func testLoadUserSpots() async {
         let spot = makeSpot(name: "User Spot")
         repository.userSpots = [spot]
-        store.load()
+        await store.load()
         XCTAssertEqual(store.userSpots.count, 1)
         XCTAssertEqual(store.userSpots[0].name, "User Spot")
     }
 
-    func testAllSpotsCombinesSeededAndUser() {
+    func testAllSpotsCombinesSeededAndUser() async {
         repository.seededSpots = [makeSpot(name: "Seeded")]
         repository.userSpots = [makeSpot(name: "User")]
-        store.load()
+        await store.load()
         XCTAssertEqual(store.allSpots.count, 2)
     }
 
     // MARK: Add / Delete / Update
 
-    func testAddSpot() {
+    func testAddSpot() async {
         let spot = makeSpot(name: "New Spot")
-        store.addSpot(spot)
+        await store.addSpot(spot)
         XCTAssertEqual(store.userSpots.count, 1)
         XCTAssertEqual(store.userSpots[0].name, "New Spot")
-        XCTAssertEqual(repository.savedUserSpots?.count, 1)
+        XCTAssertEqual(repository.addedSpots.map(\.id), [spot.id])
     }
 
-    func testDeleteUserSpot() {
+    func testDeleteUserSpot() async {
         let spot = makeSpot()
-        store.addSpot(spot)
-        store.deleteUserSpots(ids: [spot.id])
+        await store.addSpot(spot)
+        await store.deleteUserSpots(ids: [spot.id])
         XCTAssertTrue(store.userSpots.isEmpty)
-        XCTAssertEqual(repository.savedUserSpots?.count, 0)
+        XCTAssertEqual(repository.deletedSpotIDs, [spot.id])
     }
 
-    func testUpdateUserSpot() {
+    func testUpdateUserSpot() async {
         let spot = makeSpot(name: "Original")
-        store.addSpot(spot)
+        await store.addSpot(spot)
         var updated = spot
         updated.name = "Updated"
-        store.update(updated)
+        await store.update(updated)
         XCTAssertEqual(store.userSpots[0].name, "Updated")
+        XCTAssertEqual(repository.updatedSpots.map(\.id), [spot.id])
     }
 
-    func testUpdateSelectedSpotFollowsUpdate() {
+    func testUpdateSelectedSpotFollowsUpdate() async {
         let spot = makeSpot(name: "Selected")
-        store.addSpot(spot)
+        await store.addSpot(spot)
         store.selectedSpot = spot
         var updated = spot
         updated.name = "Updated Selected"
-        store.update(updated)
+        await store.update(updated)
         XCTAssertEqual(store.selectedSpot?.name, "Updated Selected")
     }
 
-    func testIsUserSpot() {
+    func testIsUserSpot() async {
         let spot = makeSpot()
-        store.addSpot(spot)
+        await store.addSpot(spot)
         XCTAssertTrue(store.isUserSpot(spot))
         let seeded = makeSpot()
         repository.seededSpots = [seeded]
-        store.load()
+        await store.load()
         XCTAssertFalse(store.isUserSpot(seeded))
     }
 
     // MARK: filteredSpots — privacy
 
-    func testPrivateSpotsExcludedFromFilteredSpots() {
+    func testPrivateSpotsExcludedFromFilteredSpots() async {
         let publicSpot = makeSpot(name: "Public", isPrivate: false)
         let privateSpot = makeSpot(name: "Private", isPrivate: true)
         repository.seededSpots = [publicSpot, privateSpot]
-        store.load()
+        await store.load()
         let results = store.filteredSpots(location: nil, favorites: [])
         XCTAssertEqual(results.count, 1)
         XCTAssertEqual(results[0].name, "Public")
     }
 
-    func testPublicSpotsRetainedInFilteredSpots() {
+    func testPublicSpotsRetainedInFilteredSpots() async {
         let spot = makeSpot(name: "Public", isPrivate: false)
         repository.seededSpots = [spot]
-        store.load()
+        await store.load()
         let results = store.filteredSpots(location: nil, favorites: [])
         XCTAssertEqual(results.count, 1)
     }
 
     // MARK: filteredSpots — filter toggles
 
-    func testQuietOnlyFilter() {
+    func testQuietOnlyFilter() async {
         let quiet = makeSpot(name: "Quiet", noiseLevel: .quiet)
         let loud = makeSpot(name: "Loud", noiseLevel: .lively)
         repository.seededSpots = [quiet, loud]
-        store.load()
+        await store.load()
         store.filters.quietOnly = true
         let results = store.filteredSpots(location: nil, favorites: [])
         XCTAssertTrue(results.allSatisfy { $0.noiseLevel == .quiet })
     }
 
-    func testShadedOnlyFilter() {
+    func testShadedOnlyFilter() async {
         let shaded = makeSpot(name: "Shaded", shadeLevel: .shaded)
         let sunny = makeSpot(name: "Sunny", shadeLevel: .sunny)
         repository.seededSpots = [shaded, sunny]
-        store.load()
+        await store.load()
         store.filters.shadedOnly = true
         let results = store.filteredSpots(location: nil, favorites: [])
         XCTAssertTrue(results.allSatisfy { $0.shadeLevel != .sunny })
     }
 
-    func testSunsetOnlyFilter() {
+    func testSunsetOnlyFilter() async {
         let sunsetSpot = makeSpot(name: "Sunset", bestTime: .sunset)
         let morningSpot = makeSpot(name: "Morning", bestTime: .morning)
         repository.seededSpots = [sunsetSpot, morningSpot]
-        store.load()
+        await store.load()
         store.filters.sunsetOnly = true
         let results = store.filteredSpots(location: nil, favorites: [])
         XCTAssertEqual(results.count, 1)
         XCTAssertEqual(results[0].name, "Sunset")
     }
 
-    func testAccessibleOnlyFilter() {
+    func testAccessibleOnlyFilter() async {
         let accessible = makeSpot(name: "Accessible", accessibility: .wheelchairFriendly)
         let limited = makeSpot(name: "Limited", accessibility: .limited)
         repository.seededSpots = [accessible, limited]
-        store.load()
+        await store.load()
         store.filters.accessibleOnly = true
         let results = store.filteredSpots(location: nil, favorites: [])
         XCTAssertEqual(results.count, 1)
         XCTAssertEqual(results[0].name, "Accessible")
     }
 
-    func testEasyAccessOnlyFilter() {
+    func testEasyAccessOnlyFilter() async {
         let easy = makeSpot(name: "Easy", accessEffort: .easy)
         let moderate = makeSpot(name: "Moderate", accessEffort: .moderate)
         repository.seededSpots = [easy, moderate]
-        store.load()
+        await store.load()
         store.filters.easyAccessOnly = true
         let results = store.filteredSpots(location: nil, favorites: [])
         XCTAssertEqual(results.count, 1)
         XCTAssertEqual(results[0].name, "Easy")
     }
 
-    func testFavoritesOnlyFilter() {
+    func testFavoritesOnlyFilter() async {
         let fav = makeSpot(name: "Fav")
         let notFav = makeSpot(name: "NotFav")
         repository.seededSpots = [fav, notFav]
-        store.load()
+        await store.load()
         store.filters.favoritesOnly = true
         let results = store.filteredSpots(location: nil, favorites: [fav.id])
         XCTAssertEqual(results.count, 1)
         XCTAssertEqual(results[0].name, "Fav")
     }
 
-    func testNearbyOnlyFilterExcludesFarSpots() {
+    func testNearbyOnlyFilterExcludesFarSpots() async {
         // Spot at SF (37.7749, -122.4194) — base location
         // Spot at NYC (40.7128, -74.0060) — far away
         let nearby = makeSpot(name: "Nearby", latitude: 37.7750, longitude: -122.4195)
         let far = makeSpot(name: "Far", latitude: 40.7128, longitude: -74.0060)
         repository.seededSpots = [nearby, far]
-        store.load()
+        await store.load()
         store.filters.nearbyOnly = true
         let sfLocation = CLLocation(latitude: 37.7749, longitude: -122.4194)
         let results = store.filteredSpots(location: sfLocation, favorites: [])
@@ -251,21 +270,21 @@ final class SpotStoreTests: XCTestCase {
 
     // MARK: Sort
 
-    func testSortByNameWhenNoLocation() {
+    func testSortByNameWhenNoLocation() async {
         let b = makeSpot(name: "B Spot")
         let a = makeSpot(name: "A Spot")
         repository.seededSpots = [b, a]
-        store.load()
+        await store.load()
         let results = store.filteredSpots(location: nil, favorites: [])
         XCTAssertEqual(results[0].name, "A Spot")
         XCTAssertEqual(results[1].name, "B Spot")
     }
 
-    func testSortByDistanceWhenLocationProvided() {
+    func testSortByDistanceWhenLocationProvided() async {
         let close = makeSpot(name: "Close", latitude: 37.7750, longitude: -122.4195)
         let far = makeSpot(name: "Far", latitude: 37.8000, longitude: -122.4100)
         repository.seededSpots = [far, close]
-        store.load()
+        await store.load()
         let sfLocation = CLLocation(latitude: 37.7749, longitude: -122.4194)
         let results = store.filteredSpots(location: sfLocation, favorites: [])
         XCTAssertEqual(results[0].name, "Close")
@@ -273,7 +292,7 @@ final class SpotStoreTests: XCTestCase {
 
     // MARK: isPrivate round-trip
 
-    func testIsPrivateCodableRoundTrip() throws {
+    func testIsPrivateCodableRoundTrip() async throws {
         let spot = makeSpot(isPrivate: true)
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
@@ -284,7 +303,7 @@ final class SpotStoreTests: XCTestCase {
         XCTAssertTrue(decoded.isPrivate)
     }
 
-    func testIsPrivateDefaultsFalseWhenMissingFromJSON() throws {
+    func testIsPrivateDefaultsFalseWhenMissingFromJSON() async throws {
         // JSON without isPrivate field
         let json = """
         {

@@ -14,7 +14,7 @@ final class LocalSpotRepository: SpotRepository {
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
     }
 
-    func loadSeededSpots() throws -> [Spot] {
+    func loadSeededSpots() async throws -> [Spot] {
         guard let url = Bundle.main.url(forResource: "SeededSpots", withExtension: "json") else {
             throw SpotRepositoryError.seedDataMissing
         }
@@ -22,14 +22,33 @@ final class LocalSpotRepository: SpotRepository {
         return try decoder.decode([Spot].self, from: data)
     }
 
-    func loadUserSpots() throws -> [Spot] {
+    func loadUserSpots() async throws -> [Spot] {
         let url = try userSpotsURL()
         guard fileManager.fileExists(atPath: url.path) else { return [] }
         let data = try Data(contentsOf: url)
         return try decoder.decode([Spot].self, from: data)
     }
 
-    func saveUserSpots(_ spots: [Spot]) throws {
+    func addUserSpot(_ spot: Spot) async throws {
+        var spots = try await loadUserSpots()
+        spots.append(spot)
+        try saveUserSpots(spots)
+    }
+
+    func updateUserSpot(_ spot: Spot) async throws {
+        var spots = try await loadUserSpots()
+        guard let index = spots.firstIndex(where: { $0.id == spot.id }) else { return }
+        spots[index] = spot
+        try saveUserSpots(spots)
+    }
+
+    func deleteUserSpots(ids: Set<UUID>) async throws {
+        var spots = try await loadUserSpots()
+        spots.removeAll { ids.contains($0.id) }
+        try saveUserSpots(spots)
+    }
+
+    private func saveUserSpots(_ spots: [Spot]) throws {
         let url = try userSpotsURL()
         let data = try encoder.encode(spots)
         try data.write(to: url, options: .atomic)

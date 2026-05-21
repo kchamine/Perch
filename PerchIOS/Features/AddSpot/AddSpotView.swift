@@ -705,7 +705,7 @@ struct AddSpotView: View {
                     notes: notes.trimmingCharacters(in: .whitespacesAndNewlines),
                     lastConfirmed: .now
                 )
-                store.update(updated)
+                await store.update(updated)
                 dismiss()
             } else {
                 let photoURL = try await uploadSelectedSpotPhoto()
@@ -734,7 +734,7 @@ struct AddSpotView: View {
                     notes: notes.trimmingCharacters(in: .whitespacesAndNewlines),
                     lastConfirmed: .now
                 )
-                store.addSpot(spot)
+                await store.addSpot(spot)
                 resetForm(keepingLocation: true)
                 saveStateMessage = nil
                 appState.revealInExplore(spot)
