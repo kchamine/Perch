@@ -26,12 +26,12 @@ struct SupabaseImageStorage: ImageStorageProviding {
     }
 
     func uploadSpotPhoto(_ data: Data) async throws -> String {
-        let objectKey = "spot-(UUID().uuidString).jpg"
+        let objectKey = "spot-\(UUID().uuidString).jpg"
         return try await upload(data, objectKey: objectKey, bucket: .spotPhotos)
     }
 
     func uploadAvatar(_ data: Data, for userID: UUID) async throws -> String {
-        let objectKey = "(userID.uuidString)/(UUID().uuidString).jpg"
+        let objectKey = "\(userID.uuidString)/\(UUID().uuidString).jpg"
         return try await upload(data, objectKey: objectKey, bucket: .userAvatars)
     }
 

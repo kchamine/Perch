@@ -49,6 +49,18 @@ final class SupabaseSpotRepository: SpotRepository {
         try await transport.insert(SupabaseSpotRow(from: spot, ownerUserID: userID))
     }
 
+    func addMigratedUserSpot(_ spot: Spot, createdAt: Date) async throws {
+        let userID = try authenticatedUserID()
+        try await transport.insert(
+            SupabaseSpotRow(
+                from: spot,
+                ownerUserID: userID,
+                createdAt: createdAt,
+                updatedAt: createdAt
+            )
+        )
+    }
+
     func updateUserSpot(_ spot: Spot) async throws {
         let userID = try authenticatedUserID()
         try await transport.update(SupabaseSpotRow(from: spot, ownerUserID: userID), id: spot.id)

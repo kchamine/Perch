@@ -9,6 +9,7 @@ struct ProfileView: View {
     @EnvironmentObject private var profileStore: ProfileStore
     @EnvironmentObject private var reviewStore: ReviewStore
     @EnvironmentObject private var authStore: AuthStore
+    @EnvironmentObject private var migrationStore: LocalDataMigrationStore
     @Environment(\.dismiss) private var dismiss
 
     @State private var profile: UserProfile = .default
@@ -350,6 +351,22 @@ struct ProfileView: View {
                 infoRow(icon: "arrow.triangle.2.circlepath", title: "Account sync active", detail: "Your profile, added spots, saved places, reviews, and custom photos are backed by Supabase.")
                 infoRow(icon: "lock.open", title: "No device lock yet", detail: "Perch does not currently add password or biometric protection on top of local storage.")
                 infoRow(icon: "person.crop.circle.badge.checkmark", title: "Owner-scoped data", detail: "Synced records are tied to the signed-in Perch account.")
+                if migrationStore.isAvailable {
+                    Button {
+                        Task { await migrationStore.presentManualSync() }
+                    } label: {
+                        Label("Sync local data now", systemImage: "icloud.and.arrow.up")
+                            .font(.headline)
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(PerchTheme.primary)
+
+                    if let statusMessage = migrationStore.statusMessage {
+                        Text(statusMessage)
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(PerchTheme.textMuted)
+                    }
+                }
             }
 
             settingsGroup(title: "About & sync status", subtitle: "What this profile experience is designed to be in Perch 1.0") {
@@ -865,13 +882,13 @@ private struct EditProfileView: View {
                         .autocorrectionDisabled()
                         .keyboardType(.emailAddress)
 
-                    Text("This email is only local reference data in Perch 1.0. It is not used for sign-in, passwords, or account recovery.")
+                    Text("This email is profile reference data only. Supabase Auth manages sign-in, passwords, and account recovery.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
 
-                Section("Local-first status") {
-                    Text("Profile edits save on this device. Perch still does not provide account sync, cloud backup, or device-level lock features.")
+                Section("Sync status") {
+                    Text("Profile edits sync to your signed-in Perch account. Local pre-account data can be moved from the Profile data controls.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }

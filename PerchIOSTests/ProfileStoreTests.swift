@@ -61,7 +61,7 @@ final class ProfileStoreTests: XCTestCase {
     }
 
     func testLocalProfileRepositoryPersistsAcrossInstances() async throws {
-        let defaults = UserDefaults(suiteName: "com.perch.profiletests.(UUID().uuidString)")!
+        let defaults = UserDefaults(suiteName: "com.perch.profiletests.\(UUID().uuidString)")!
         let repository = LocalProfileRepository(defaults: defaults)
         var profile = UserProfile.default
         profile.mapsAppPreference = .googleMaps

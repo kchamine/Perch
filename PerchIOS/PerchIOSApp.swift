@@ -9,6 +9,7 @@ struct PerchIOSApp: App {
     @StateObject private var profileStore: ProfileStore
     @StateObject private var reviewStore: ReviewStore
     @StateObject private var authStore: AuthStore
+    @StateObject private var migrationStore: LocalDataMigrationStore
 
     init() {
         let authStore = AuthStore()
@@ -18,21 +19,36 @@ struct PerchIOSApp: App {
         let favoritesRepository: FavoritesRepository
         let profileRepository: ProfileRepository
         let reviewRepository: ReviewRepository
+        let migrationStore: LocalDataMigrationStore
         if let client = SupabaseClientProvider.shared {
-            spotRepository = SupabaseSpotRepository(
+            let supabaseSpotRepository = SupabaseSpotRepository(
                 client: client,
                 currentUserID: { authStore.currentUser?.id }
             )
-            favoritesRepository = SupabaseFavoritesRepository(
+            let supabaseFavoritesRepository = SupabaseFavoritesRepository(
                 client: client,
                 currentUserID: { authStore.currentUser?.id }
             )
-            profileRepository = SupabaseProfileRepository(
+            let supabaseProfileRepository = SupabaseProfileRepository(
                 client: client,
                 currentUserID: { authStore.currentUser?.id }
             )
-            reviewRepository = SupabaseReviewRepository(
+            let supabaseReviewRepository = SupabaseReviewRepository(
                 client: client,
+                currentUserID: { authStore.currentUser?.id }
+            )
+            spotRepository = supabaseSpotRepository
+            favoritesRepository = supabaseFavoritesRepository
+            profileRepository = supabaseProfileRepository
+            reviewRepository = supabaseReviewRepository
+            migrationStore = LocalDataMigrationStore(
+                migrator: LocalToRemoteMigrator(
+                    remoteSpotRepository: supabaseSpotRepository,
+                    remoteReviewRepository: supabaseReviewRepository,
+                    remoteFavoritesRepository: supabaseFavoritesRepository,
+                    remoteProfileRepository: supabaseProfileRepository,
+                    imageStorage: SupabaseImageStorage(client: client)
+                ),
                 currentUserID: { authStore.currentUser?.id }
             )
         } else {
@@ -40,11 +56,16 @@ struct PerchIOSApp: App {
             favoritesRepository = LocalFavoritesRepository()
             profileRepository = LocalProfileRepository()
             reviewRepository = LocalReviewRepository()
+            migrationStore = LocalDataMigrationStore(
+                migrator: nil,
+                currentUserID: { authStore.currentUser?.id }
+            )
         }
         _store = StateObject(wrappedValue: SpotStore(repository: spotRepository))
         _favorites = StateObject(wrappedValue: FavoritesStore(repository: favoritesRepository))
         _profileStore = StateObject(wrappedValue: ProfileStore(repository: profileRepository))
         _reviewStore = StateObject(wrappedValue: ReviewStore(repository: reviewRepository))
+        _migrationStore = StateObject(wrappedValue: migrationStore)
     }
 
     var body: some Scene {
@@ -79,6 +100,7 @@ struct PerchIOSApp: App {
             .environmentObject(profileStore)
             .environmentObject(reviewStore)
             .environmentObject(authStore)
+            .environmentObject(migrationStore)
             .task {
                 await store.load()
                 await favorites.load()
@@ -95,6 +117,7 @@ struct PerchIOSApp: App {
                     await favorites.load()
                     await profileStore.load()
                     await reviewStore.load()
+                    await migrationStore.evaluateAfterSignIn()
                 } else {
                     store.clearUserSpots()
                     favorites.clear()
@@ -109,6 +132,18 @@ struct PerchIOSApp: App {
                 OnboardingView()
                     .environmentObject(appState)
                     .environmentObject(locationManager)
+            }
+            .sheet(item: $migrationStore.sheetMode) { _ in
+                LocalDataMigrationView()
+                    .environmentObject(migrationStore)
+            }
+            .onChange(of: migrationStore.completedRunID) {
+                Task {
+                    await store.load()
+                    await favorites.load()
+                    await profileStore.load()
+                    await reviewStore.load()
+                }
             }
         }
     }

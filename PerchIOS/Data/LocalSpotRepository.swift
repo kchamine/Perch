@@ -2,11 +2,13 @@ import Foundation
 
 final class LocalSpotRepository: SpotRepository {
     private let fileManager: FileManager
+    private let documentsDirectory: URL?
     private let decoder: JSONDecoder
     private let encoder: JSONEncoder
 
-    init(fileManager: FileManager = .default) {
+    init(fileManager: FileManager = .default, documentsDirectory: URL? = nil) {
         self.fileManager = fileManager
+        self.documentsDirectory = documentsDirectory
         self.decoder = JSONDecoder()
         self.encoder = JSONEncoder()
         decoder.dateDecodingStrategy = .iso8601
@@ -55,7 +57,15 @@ final class LocalSpotRepository: SpotRepository {
     }
 
     private func userSpotsURL() throws -> URL {
-        let directory = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+        let directory: URL
+        if let documentsDirectory {
+            directory = documentsDirectory
+            if !fileManager.fileExists(atPath: directory.path) {
+                try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
+            }
+        } else {
+            directory = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+        }
         return directory.appendingPathComponent("user-spots.json")
     }
 }

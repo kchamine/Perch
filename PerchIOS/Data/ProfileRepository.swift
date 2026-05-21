@@ -37,6 +37,10 @@ final class LocalProfileRepository: ProfileRepository {
         self.defaults = defaults
     }
 
+    func hasSavedProfile() -> Bool {
+        defaults.data(forKey: Self.storageKey) != nil
+    }
+
     func loadProfile() async throws -> UserProfile {
         guard let data = defaults.data(forKey: Self.storageKey),
               let decoded = try? JSONDecoder().decode(UserProfile.self, from: data) else {

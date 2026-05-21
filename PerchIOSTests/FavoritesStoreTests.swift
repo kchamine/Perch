@@ -90,7 +90,7 @@ final class FavoritesStoreTests: XCTestCase {
     }
 
     func testLocalFavoritesRepositoryPersistsRoundTrip() async throws {
-        let defaults = UserDefaults(suiteName: "com.perch.favtests.(UUID().uuidString)")!
+        let defaults = UserDefaults(suiteName: "com.perch.favtests.\(UUID().uuidString)")!
         let spotID = UUID()
         let repository = LocalFavoritesRepository(defaults: defaults)
 

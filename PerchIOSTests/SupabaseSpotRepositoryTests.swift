@@ -37,6 +37,18 @@ final class SupabaseSpotRepositoryTests: XCTestCase {
         XCTAssertEqual(transport.insertedRows.first?.ownerUserID, userID)
     }
 
+    func testAddMigratedUserSpotPreservesCreatedTimestamp() async throws {
+        let transport = StubSupabaseSpotsTransport()
+        let spot = makeSupabaseSpot()
+        let createdAt = ISO8601DateFormatter().date(from: "2026-05-20T18:00:00Z")!
+        let repository = SupabaseSpotRepository(transport: transport, currentUserID: { self.userID })
+
+        try await repository.addMigratedUserSpot(spot, createdAt: createdAt)
+
+        XCTAssertEqual(transport.insertedRows.first?.createdAt, createdAt)
+        XCTAssertEqual(transport.insertedRows.first?.updatedAt, createdAt)
+    }
+
     func testUpdateUserSpotFiltersByID() async throws {
         let transport = StubSupabaseSpotsTransport()
         let spot = makeSupabaseSpot()
