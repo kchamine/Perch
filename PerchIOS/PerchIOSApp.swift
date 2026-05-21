@@ -8,19 +8,31 @@ struct PerchIOSApp: App {
     @StateObject private var appState = AppState()
     @StateObject private var profileStore = ProfileStore()
     @StateObject private var reviewStore = ReviewStore()
+    @StateObject private var authStore = AuthStore()
 
     var body: some Scene {
         WindowGroup {
-            PerchShell {
-                Group {
-                    switch appState.selectedTab {
-                    case .explore:
-                        ExploreView()
-                    case .saved:
-                        SavedView()
-                    case .addSpot:
-                        AddSpotView()
+            Group {
+                if authStore.isRestoringSession {
+                    ProgressView()
+                        .tint(PerchTheme.primary)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(PerchTheme.background.ignoresSafeArea())
+                } else if authStore.isSignedIn {
+                    PerchShell {
+                        Group {
+                            switch appState.selectedTab {
+                            case .explore:
+                                ExploreView()
+                            case .saved:
+                                SavedView()
+                            case .addSpot:
+                                AddSpotView()
+                            }
+                        }
                     }
+                } else {
+                    SignInView()
                 }
             }
             .environmentObject(store)
@@ -29,6 +41,7 @@ struct PerchIOSApp: App {
             .environmentObject(appState)
             .environmentObject(profileStore)
             .environmentObject(reviewStore)
+            .environmentObject(authStore)
             .task {
                 store.load()
                 if appState.hasCompletedOnboarding {

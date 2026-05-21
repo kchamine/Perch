@@ -45,6 +45,10 @@
 		A00100010000000000000021 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000021 /* OnboardingView.swift */; };
 		A00100010000000000000022 /* SupabaseClientProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000022 /* SupabaseClientProvider.swift */; };
 		A00100010000000000000023 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = A00180010000000000000002 /* Supabase */; };
+		A00100010000000000000024 /* AuthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000024 /* AuthStore.swift */; };
+		A00100010000000000000025 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000025 /* SignInView.swift */; };
+		A00100010000000000000026 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000026 /* SignUpView.swift */; };
+		B00100010000000000000006 /* AuthStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00110010000000000000006 /* AuthStoreTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -83,11 +87,15 @@
 		A00110010000000000000021 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		A00110010000000000000022 /* SupabaseClientProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseClientProvider.swift; sourceTree = "<group>"; };
 		A00110010000000000000023 /* Supabase.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Supabase.xcconfig; sourceTree = "<group>"; };
+		A00110010000000000000024 /* AuthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthStore.swift; sourceTree = "<group>"; };
+		A00110010000000000000025 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
+		A00110010000000000000026 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		B00110010000000000000001 /* SpotStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotStoreTests.swift; sourceTree = "<group>"; };
 		B00110010000000000000002 /* FavoritesStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesStoreTests.swift; sourceTree = "<group>"; };
 		B00110010000000000000003 /* ReviewStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewStoreTests.swift; sourceTree = "<group>"; };
 		B00110010000000000000004 /* PerchIOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = PerchIOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B00110010000000000000005 /* ProfileStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStoreTests.swift; sourceTree = "<group>"; };
+		B00110010000000000000006 /* AuthStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthStoreTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +159,7 @@
 				B00110010000000000000002 /* FavoritesStoreTests.swift */,
 				B00110010000000000000003 /* ReviewStoreTests.swift */,
 				B00110010000000000000005 /* ProfileStoreTests.swift */,
+				B00110010000000000000006 /* AuthStoreTests.swift */,
 			);
 			path = PerchIOSTests;
 			sourceTree = "<group>";
@@ -176,6 +185,7 @@
 				A00110010000000000000008 /* SpotStore.swift */,
 				A0011001000000000000001E /* ProfileStore.swift */,
 				A0011001000000000000001F /* ReviewStore.swift */,
+				A00110010000000000000024 /* AuthStore.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -189,6 +199,7 @@
 				A0013001000000000000000C /* AddSpot */,
 				A0013001000000000000000D /* Profile */,
 				A0013001000000000000000E /* Onboarding */,
+				A00130010000000000000010 /* Auth */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -199,6 +210,15 @@
 				A00110010000000000000021 /* OnboardingView.swift */,
 			);
 			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		A00130010000000000000010 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				A00110010000000000000025 /* SignInView.swift */,
+				A00110010000000000000026 /* SignUpView.swift */,
+			);
+			path = Auth;
 			sourceTree = "<group>";
 		};
 		A00130010000000000000007 /* Services */ = {
@@ -405,6 +425,7 @@
 				A00100010000000000000008 /* SpotStore.swift in Sources */,
 				A0010001000000000000001E /* ProfileStore.swift in Sources */,
 				A0010001000000000000001F /* ReviewStore.swift in Sources */,
+				A00100010000000000000024 /* AuthStore.swift in Sources */,
 				A00100010000000000000009 /* ImageStore.swift in Sources */,
 				A0010001000000000000000A /* LocationManager.swift in Sources */,
 				A0010001000000000000000B /* NavigationService.swift in Sources */,
@@ -412,6 +433,8 @@
 				A0010001000000000000000C /* ExploreView.swift in Sources */,
 				A0010001000000000000000D /* FilterSheetView.swift in Sources */,
 				A0010001000000000000000E /* SpotCardView.swift in Sources */,
+				A00100010000000000000025 /* SignInView.swift in Sources */,
+				A00100010000000000000026 /* SignUpView.swift in Sources */,
 				A0010001000000000000000F /* SpotDetailView.swift in Sources */,
 				A00100010000000000000010 /* AttributeTagView.swift in Sources */,
 				A00100010000000000000011 /* SeedOrUserPhotoView.swift in Sources */,
@@ -432,6 +455,7 @@
 				B00100010000000000000002 /* FavoritesStoreTests.swift in Sources */,
 				B00100010000000000000003 /* ReviewStoreTests.swift in Sources */,
 				B00100010000000000000005 /* ProfileStoreTests.swift in Sources */,
+				B00100010000000000000006 /* AuthStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

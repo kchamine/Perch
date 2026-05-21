@@ -8,6 +8,7 @@ struct ProfileView: View {
     @EnvironmentObject private var favorites: FavoritesStore
     @EnvironmentObject private var profileStore: ProfileStore
     @EnvironmentObject private var reviewStore: ReviewStore
+    @EnvironmentObject private var authStore: AuthStore
     @Environment(\.dismiss) private var dismiss
 
     @State private var profile: UserProfile = .default
@@ -15,6 +16,9 @@ struct ProfileView: View {
     @State private var isLoadingAvatar = false
     @State private var isShowingEditProfile = false
     @State private var pendingDeletionID: UUID?
+    @State private var isConfirmingSignOut = false
+    @State private var isSigningOut = false
+    @State private var signOutError: String?
 
     private var displayName: String {
         let trimmed = profile.displayName.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -77,6 +81,7 @@ struct ProfileView: View {
                     activityOverviewCard
                     identitySection
                     activitySection
+                    accountSection
                     settingsSection
                     aboutSection
                 }
@@ -119,6 +124,14 @@ struct ProfileView: View {
                 }
             } message: {
                 Text("This review will be permanently removed.")
+            }
+            .alert("Sign out?", isPresented: $isConfirmingSignOut) {
+                Button("Sign out", role: .destructive) {
+                    signOut()
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Perch will return to the sign-in screen.")
             }
             .sheet(isPresented: $isShowingEditProfile) {
                 EditProfileView(
@@ -339,6 +352,38 @@ struct ProfileView: View {
                 infoRow(icon: "person.text.rectangle", title: "A real local profile", detail: "This surface is meant to help you track identity, taste, and activity without pretending backend accounts already exist.")
                 infoRow(icon: "sparkles", title: "Contribution-first", detail: "Your added spots, saved places, and reviews drive the profile stats and activity sections above.")
                 infoRow(icon: "shippingbox", title: "Future-ready shape", detail: "The structure is organized so Perch can map into real sync and auth later without fake product theater today.")
+            }
+        }
+        .padding(20)
+        .perchGlassCard()
+    }
+
+    private var accountSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            sectionTitle("Account")
+
+            settingsGroup(title: "Perch account", subtitle: "Your identity for backend-backed sync and ownership") {
+                infoRow(icon: "person.crop.circle.badge.checkmark", title: "Signed in", detail: authStore.currentUser?.email ?? "Perch account")
+
+                if let signOutError {
+                    Text(signOutError)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.red)
+                }
+
+                Button(role: .destructive) {
+                    isConfirmingSignOut = true
+                } label: {
+                    HStack {
+                        if isSigningOut {
+                            ProgressView()
+                        }
+                        Label(isSigningOut ? "Signing out..." : "Sign out", systemImage: "rectangle.portrait.and.arrow.right")
+                            .font(.headline)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .disabled(isSigningOut)
             }
         }
         .padding(20)
@@ -676,6 +721,21 @@ struct ProfileView: View {
 
     private func recentFirst(lhs: Spot, rhs: Spot) -> Bool {
         lhs.lastConfirmed > rhs.lastConfirmed
+    }
+
+    private func signOut() {
+        isSigningOut = true
+        signOutError = nil
+
+        Task {
+            do {
+                try await authStore.signOut()
+                dismiss()
+            } catch {
+                signOutError = PerchAuthError.map(error).localizedDescription
+            }
+            isSigningOut = false
+        }
     }
 }
 

@@ -9,14 +9,14 @@ enum SupabaseClientProvider {
         let configuration = try SupabaseClientConfiguration.load(from: bundle)
         return SupabaseClient(
             supabaseURL: configuration.url,
-            supabaseKey: configuration.anonKey
+            supabaseKey: configuration.publishableKey
         )
     }
 }
 
 struct SupabaseClientConfiguration: Equatable {
     let url: URL
-    let anonKey: String
+    let publishableKey: String
 
     static func load(from bundle: Bundle) throws -> SupabaseClientConfiguration {
         guard let rawURL = bundle.object(forInfoDictionaryKey: "SUPABASE_URL") as? String,
@@ -27,29 +27,29 @@ struct SupabaseClientConfiguration: Equatable {
             throw SupabaseClientConfigurationError.missingURL
         }
 
-        guard let rawAnonKey = bundle.object(forInfoDictionaryKey: "SUPABASE_ANON_KEY") as? String else {
-            throw SupabaseClientConfigurationError.missingAnonKey
+        guard let rawPublishableKey = bundle.object(forInfoDictionaryKey: "SUPABASE_PUBLISHABLE_KEY") as? String else {
+            throw SupabaseClientConfigurationError.missingPublishableKey
         }
 
-        let anonKey = rawAnonKey.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !anonKey.isEmpty, !anonKey.contains("$(") else {
-            throw SupabaseClientConfigurationError.missingAnonKey
+        let publishableKey = rawPublishableKey.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !publishableKey.isEmpty, !publishableKey.contains("$(") else {
+            throw SupabaseClientConfigurationError.missingPublishableKey
         }
 
-        return SupabaseClientConfiguration(url: url, anonKey: anonKey)
+        return SupabaseClientConfiguration(url: url, publishableKey: publishableKey)
     }
 }
 
 enum SupabaseClientConfigurationError: LocalizedError, Equatable {
     case missingURL
-    case missingAnonKey
+    case missingPublishableKey
 
     var errorDescription: String? {
         switch self {
         case .missingURL:
             return "SUPABASE_URL is missing or invalid in the app configuration."
-        case .missingAnonKey:
-            return "SUPABASE_ANON_KEY is missing in the app configuration."
+        case .missingPublishableKey:
+            return "SUPABASE_PUBLISHABLE_KEY is missing in the app configuration."
         }
     }
 }
