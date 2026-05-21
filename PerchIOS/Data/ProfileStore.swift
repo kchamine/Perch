@@ -2,20 +2,21 @@ import Foundation
 
 @MainActor
 final class ProfileStore: ObservableObject {
-    @Published var profile: UserProfile {
-        didSet { persist() }
+    @Published private(set) var profile: UserProfile = .default
+    @Published private(set) var loadError: String?
+
+    private let repository: ProfileRepository
+
+    init(repository: ProfileRepository = LocalProfileRepository()) {
+        self.repository = repository
     }
 
-    private let defaults: UserDefaults
-    private let key = "perch.localProfile"
-
-    init(defaults: UserDefaults = .standard) {
-        self.defaults = defaults
-        if let data = defaults.data(forKey: key),
-           let decoded = try? JSONDecoder().decode(UserProfile.self, from: data) {
-            self.profile = decoded.normalized
-        } else {
-            self.profile = .default
+    func load() async {
+        do {
+            profile = try await repository.loadProfile().normalized
+            loadError = nil
+        } catch {
+            loadError = error.localizedDescription
         }
     }
 
@@ -25,11 +26,20 @@ final class ProfileStore: ObservableObject {
         next = next.normalized
         next.updatedAt = .now
         profile = next
+        Task { await save(next) }
     }
 
-    private func persist() {
-        if let data = try? JSONEncoder().encode(profile) {
-            defaults.set(data, forKey: key)
+    func clear() {
+        profile = .default
+        loadError = nil
+    }
+
+    private func save(_ profile: UserProfile) async {
+        do {
+            try await repository.saveProfile(profile)
+            loadError = nil
+        } catch {
+            loadError = error.localizedDescription
         }
     }
 }

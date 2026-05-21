@@ -3,13 +3,12 @@ import Foundation
 @MainActor
 final class ReviewStore: ObservableObject {
     @Published private(set) var reviews: [SpotReview] = []
+    @Published private(set) var loadError: String?
 
-    private let defaults: UserDefaults
-    private let key = "perch.reviews"
+    private let repository: ReviewRepository
 
-    init(defaults: UserDefaults = .standard) {
-        self.defaults = defaults
-        load()
+    init(repository: ReviewRepository = LocalReviewRepository()) {
+        self.repository = repository
     }
 
     func reviews(for spotID: UUID) -> [SpotReview] {
@@ -48,13 +47,14 @@ final class ReviewStore: ObservableObject {
             updatedAt: .now
         )
         reviews.append(review)
-        persist()
+        Task { await persistInsert(review) }
     }
 
     func deleteReview(id: UUID) {
         guard let index = reviews.firstIndex(where: { $0.id == id }) else { return }
+        let removed = reviews[index]
         reviews.remove(at: index)
-        persist()
+        Task { await persistDelete(id: id, rollback: removed) }
     }
 
     func summary(for spotID: UUID) -> SpotReviewSummary {
@@ -93,18 +93,38 @@ final class ReviewStore: ObservableObject {
         )
     }
 
-    private func load() {
-        guard let data = defaults.data(forKey: key),
-              let decoded = try? JSONDecoder().decode([SpotReview].self, from: data) else {
+    func load() async {
+        do {
+            reviews = try await repository.loadReviews()
+            loadError = nil
+        } catch {
             reviews = []
-            return
+            loadError = error.localizedDescription
         }
-        reviews = decoded
     }
 
-    private func persist() {
-        if let data = try? JSONEncoder().encode(reviews) {
-            defaults.set(data, forKey: key)
+    func clear() {
+        reviews = []
+        loadError = nil
+    }
+
+    private func persistInsert(_ review: SpotReview) async {
+        do {
+            try await repository.insert(review)
+            loadError = nil
+        } catch {
+            reviews.removeAll { $0.id == review.id }
+            loadError = error.localizedDescription
+        }
+    }
+
+    private func persistDelete(id: UUID, rollback review: SpotReview) async {
+        do {
+            try await repository.delete(id: id)
+            loadError = nil
+        } catch {
+            reviews.append(review)
+            loadError = error.localizedDescription
         }
     }
 }

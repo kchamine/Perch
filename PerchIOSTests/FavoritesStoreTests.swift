@@ -1,20 +1,19 @@
 import XCTest
 @testable import PerchIOS
 
+@MainActor
 final class FavoritesStoreTests: XCTestCase {
     private var store: FavoritesStore!
-    private var defaults: UserDefaults!
+    private var repository: StubFavoritesRepository!
 
-    override func setUp() {
-        super.setUp()
-        defaults = UserDefaults(suiteName: "com.perch.favtests.\(UUID().uuidString)")!
-        store = FavoritesStore(defaults: defaults)
+    override func setUp() async throws {
+        repository = StubFavoritesRepository()
+        store = FavoritesStore(repository: repository)
     }
 
-    override func tearDown() {
+    override func tearDown() async throws {
         store = nil
-        defaults = nil
-        super.tearDown()
+        repository = nil
     }
 
     private func makeSpot(id: UUID = UUID()) -> Spot {
@@ -45,73 +44,97 @@ final class FavoritesStoreTests: XCTestCase {
         )
     }
 
-    // MARK: - Toggle
+    func testLoadUsesRepositoryFavorites() async {
+        let id = UUID()
+        repository.loadedFavorites = [id]
 
-    func testToggleAddsFavorite() {
+        await store.load()
+
+        XCTAssertEqual(store.favoriteIDs, [id])
+        XCTAssertNil(store.loadError)
+    }
+
+    func testToggleAddsFavoriteOptimisticallyAndPersists() async {
         let spot = makeSpot()
-        XCTAssertFalse(store.isFavorite(spot))
+
         store.toggle(spot)
+        await settleAsyncStoreWork()
+
         XCTAssertTrue(store.isFavorite(spot))
+        XCTAssertEqual(repository.addedSpotIDs, [spot.id])
     }
 
-    func testToggleRemovesFavorite() {
+    func testToggleRemovesFavoriteOptimisticallyAndPersists() async {
         let spot = makeSpot()
         store.toggle(spot)
+        await settleAsyncStoreWork()
+
         store.toggle(spot)
+        await settleAsyncStoreWork()
+
         XCTAssertFalse(store.isFavorite(spot))
+        XCTAssertEqual(repository.removedIDs, [spot.id])
     }
 
-    func testToggleIsIdempotentAfterTwoToggles() {
+    func testRemoveRollsBackWhenRepositoryFails() async {
         let spot = makeSpot()
         store.toggle(spot)
-        store.toggle(spot)
-        store.toggle(spot)
-        XCTAssertTrue(store.isFavorite(spot))
-    }
+        await settleAsyncStoreWork()
+        repository.removeError = TestRepositoryError.failed
 
-    // MARK: - Remove
-
-    func testRemove() {
-        let spot = makeSpot()
-        store.toggle(spot)
         store.remove([spot.id])
-        XCTAssertFalse(store.isFavorite(spot))
+        await settleAsyncStoreWork()
+
+        XCTAssertTrue(store.isFavorite(spot))
+        XCTAssertEqual(store.loadError, TestRepositoryError.failed.localizedDescription)
     }
 
-    func testRemoveMultiple() {
-        let a = makeSpot()
-        let b = makeSpot()
-        let c = makeSpot()
-        store.toggle(a)
-        store.toggle(b)
-        store.toggle(c)
-        store.remove([a.id, b.id])
-        XCTAssertFalse(store.isFavorite(a))
-        XCTAssertFalse(store.isFavorite(b))
-        XCTAssertTrue(store.isFavorite(c))
+    func testLocalFavoritesRepositoryPersistsRoundTrip() async throws {
+        let defaults = UserDefaults(suiteName: "com.perch.favtests.(UUID().uuidString)")!
+        let spotID = UUID()
+        let repository = LocalFavoritesRepository(defaults: defaults)
+
+        try await repository.addFavorite(spotID: spotID)
+
+        let restored = try await LocalFavoritesRepository(defaults: defaults).loadFavorites()
+        XCTAssertEqual(restored, [spotID])
+    }
+}
+
+final class StubFavoritesRepository: FavoritesRepository {
+    var loadedFavorites: Set<UUID> = []
+    var loadError: Error?
+    var addError: Error?
+    var removeError: Error?
+    var addedSpotIDs: [UUID] = []
+    var removedIDs: Set<UUID> = []
+
+    func loadFavorites() async throws -> Set<UUID> {
+        if let loadError { throw loadError }
+        return loadedFavorites
     }
 
-    // MARK: - Persistence
-
-    func testPersistenceRoundTrip() {
-        let spot = makeSpot()
-        store.toggle(spot)
-
-        // Create a new store from the same defaults — should load the persisted value
-        let store2 = FavoritesStore(defaults: defaults)
-        XCTAssertTrue(store2.isFavorite(spot))
+    func addFavorite(spotID: UUID) async throws {
+        if let addError { throw addError }
+        addedSpotIDs.append(spotID)
+        loadedFavorites.insert(spotID)
     }
 
-    func testPersistenceAfterRemove() {
-        let spot = makeSpot()
-        store.toggle(spot)
-        store.toggle(spot) // remove it
-
-        let store2 = FavoritesStore(defaults: defaults)
-        XCTAssertFalse(store2.isFavorite(spot))
+    func removeFavorites(ids: Set<UUID>) async throws {
+        if let removeError { throw removeError }
+        removedIDs.formUnion(ids)
+        loadedFavorites.subtract(ids)
     }
+}
 
-    func testEmptyFavoritesOnFreshStart() {
-        XCTAssertTrue(store.favoriteIDs.isEmpty)
+enum TestRepositoryError: LocalizedError, Equatable {
+    case failed
+
+    var errorDescription: String? {
+        "Repository failed"
     }
+}
+
+func settleAsyncStoreWork() async {
+    try? await Task.sleep(nanoseconds: 50_000_000)
 }

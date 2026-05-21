@@ -3,27 +3,48 @@ import SwiftUI
 @main
 struct PerchIOSApp: App {
     @StateObject private var store: SpotStore
-    @StateObject private var favorites = FavoritesStore()
+    @StateObject private var favorites: FavoritesStore
     @StateObject private var locationManager = LocationManager()
     @StateObject private var appState = AppState()
-    @StateObject private var profileStore = ProfileStore()
-    @StateObject private var reviewStore = ReviewStore()
+    @StateObject private var profileStore: ProfileStore
+    @StateObject private var reviewStore: ReviewStore
     @StateObject private var authStore: AuthStore
 
     init() {
         let authStore = AuthStore()
         _authStore = StateObject(wrappedValue: authStore)
 
-        let repository: SpotRepository
+        let spotRepository: SpotRepository
+        let favoritesRepository: FavoritesRepository
+        let profileRepository: ProfileRepository
+        let reviewRepository: ReviewRepository
         if let client = SupabaseClientProvider.shared {
-            repository = SupabaseSpotRepository(
+            spotRepository = SupabaseSpotRepository(
+                client: client,
+                currentUserID: { authStore.currentUser?.id }
+            )
+            favoritesRepository = SupabaseFavoritesRepository(
+                client: client,
+                currentUserID: { authStore.currentUser?.id }
+            )
+            profileRepository = SupabaseProfileRepository(
+                client: client,
+                currentUserID: { authStore.currentUser?.id }
+            )
+            reviewRepository = SupabaseReviewRepository(
                 client: client,
                 currentUserID: { authStore.currentUser?.id }
             )
         } else {
-            repository = LocalSpotRepository()
+            spotRepository = LocalSpotRepository()
+            favoritesRepository = LocalFavoritesRepository()
+            profileRepository = LocalProfileRepository()
+            reviewRepository = LocalReviewRepository()
         }
-        _store = StateObject(wrappedValue: SpotStore(repository: repository))
+        _store = StateObject(wrappedValue: SpotStore(repository: spotRepository))
+        _favorites = StateObject(wrappedValue: FavoritesStore(repository: favoritesRepository))
+        _profileStore = StateObject(wrappedValue: ProfileStore(repository: profileRepository))
+        _reviewStore = StateObject(wrappedValue: ReviewStore(repository: reviewRepository))
     }
 
     var body: some Scene {
@@ -60,6 +81,9 @@ struct PerchIOSApp: App {
             .environmentObject(authStore)
             .task {
                 await store.load()
+                await favorites.load()
+                await profileStore.load()
+                await reviewStore.load()
                 if appState.hasCompletedOnboarding {
                     locationManager.requestIfNeeded()
                 }
@@ -68,8 +92,14 @@ struct PerchIOSApp: App {
                 guard !authStore.isRestoringSession else { return }
                 if authStore.isSignedIn {
                     await store.load()
+                    await favorites.load()
+                    await profileStore.load()
+                    await reviewStore.load()
                 } else {
                     store.clearUserSpots()
+                    favorites.clear()
+                    profileStore.clear()
+                    reviewStore.clear()
                 }
             }
             .fullScreenCover(isPresented: Binding(

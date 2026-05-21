@@ -51,10 +51,18 @@
 		A00100010000000000000027 /* SupabaseImageStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000027 /* SupabaseImageStorage.swift */; };
 		A00100010000000000000028 /* SupabaseSpotRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000028 /* SupabaseSpotRow.swift */; };
 		A00100010000000000000029 /* SupabaseSpotRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000029 /* SupabaseSpotRepository.swift */; };
+		A0010001000000000000002A /* FavoritesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011001000000000000002A /* FavoritesRepository.swift */; };
+		A0010001000000000000002B /* SupabaseFavoritesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011001000000000000002B /* SupabaseFavoritesRepository.swift */; };
+		A0010001000000000000002C /* ReviewRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011001000000000000002C /* ReviewRepository.swift */; };
+		A0010001000000000000002D /* LocalReviewRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011001000000000000002D /* LocalReviewRepository.swift */; };
+		A0010001000000000000002E /* SupabaseReviewRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011001000000000000002E /* SupabaseReviewRepository.swift */; };
+		A0010001000000000000002F /* ProfileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0011001000000000000002F /* ProfileRepository.swift */; };
+		A00100010000000000000030 /* SupabaseProfileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00110010000000000000030 /* SupabaseProfileRepository.swift */; };
 		B00100010000000000000006 /* AuthStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00110010000000000000006 /* AuthStoreTests.swift */; };
 		B00100010000000000000007 /* SupabaseImageStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00110010000000000000007 /* SupabaseImageStorageTests.swift */; };
 		B00100010000000000000008 /* SupabaseSpotRowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00110010000000000000008 /* SupabaseSpotRowTests.swift */; };
 		B00100010000000000000009 /* SupabaseSpotRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00110010000000000000009 /* SupabaseSpotRepositoryTests.swift */; };
+		B0010001000000000000000A /* SupabaseAccountRepositoriesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0011001000000000000000A /* SupabaseAccountRepositoriesTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -99,6 +107,13 @@
 		A00110010000000000000027 /* SupabaseImageStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseImageStorage.swift; sourceTree = "<group>"; };
 		A00110010000000000000028 /* SupabaseSpotRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseSpotRow.swift; sourceTree = "<group>"; };
 		A00110010000000000000029 /* SupabaseSpotRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseSpotRepository.swift; sourceTree = "<group>"; };
+		A0011001000000000000002A /* FavoritesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesRepository.swift; sourceTree = "<group>"; };
+		A0011001000000000000002B /* SupabaseFavoritesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseFavoritesRepository.swift; sourceTree = "<group>"; };
+		A0011001000000000000002C /* ReviewRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewRepository.swift; sourceTree = "<group>"; };
+		A0011001000000000000002D /* LocalReviewRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalReviewRepository.swift; sourceTree = "<group>"; };
+		A0011001000000000000002E /* SupabaseReviewRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseReviewRepository.swift; sourceTree = "<group>"; };
+		A0011001000000000000002F /* ProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRepository.swift; sourceTree = "<group>"; };
+		A00110010000000000000030 /* SupabaseProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseProfileRepository.swift; sourceTree = "<group>"; };
 		B00110010000000000000001 /* SpotStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotStoreTests.swift; sourceTree = "<group>"; };
 		B00110010000000000000002 /* FavoritesStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesStoreTests.swift; sourceTree = "<group>"; };
 		B00110010000000000000003 /* ReviewStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewStoreTests.swift; sourceTree = "<group>"; };
@@ -108,6 +123,7 @@
 		B00110010000000000000007 /* SupabaseImageStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseImageStorageTests.swift; sourceTree = "<group>"; };
 		B00110010000000000000008 /* SupabaseSpotRowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseSpotRowTests.swift; sourceTree = "<group>"; };
 		B00110010000000000000009 /* SupabaseSpotRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseSpotRepositoryTests.swift; sourceTree = "<group>"; };
+		B0011001000000000000000A /* SupabaseAccountRepositoriesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseAccountRepositoriesTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,6 +191,7 @@
 				B00110010000000000000007 /* SupabaseImageStorageTests.swift */,
 				B00110010000000000000008 /* SupabaseSpotRowTests.swift */,
 				B00110010000000000000009 /* SupabaseSpotRepositoryTests.swift */,
+				B0011001000000000000000A /* SupabaseAccountRepositoriesTests.swift */,
 			);
 			path = PerchIOSTests;
 			sourceTree = "<group>";
@@ -196,13 +213,20 @@
 			children = (
 				A00110010000000000000005 /* SpotRepository.swift */,
 				A00110010000000000000006 /* LocalSpotRepository.swift */,
+				A0011001000000000000002A /* FavoritesRepository.swift */,
 				A00110010000000000000007 /* FavoritesStore.swift */,
 				A00110010000000000000008 /* SpotStore.swift */,
+				A0011001000000000000002F /* ProfileRepository.swift */,
 				A0011001000000000000001E /* ProfileStore.swift */,
+				A0011001000000000000002C /* ReviewRepository.swift */,
+				A0011001000000000000002D /* LocalReviewRepository.swift */,
 				A0011001000000000000001F /* ReviewStore.swift */,
 				A00110010000000000000024 /* AuthStore.swift */,
 				A00110010000000000000028 /* SupabaseSpotRow.swift */,
 				A00110010000000000000029 /* SupabaseSpotRepository.swift */,
+				A0011001000000000000002B /* SupabaseFavoritesRepository.swift */,
+				A0011001000000000000002E /* SupabaseReviewRepository.swift */,
+				A00110010000000000000030 /* SupabaseProfileRepository.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -439,13 +463,20 @@
 				A0010001000000000000001D /* SpotReview.swift in Sources */,
 				A00100010000000000000005 /* SpotRepository.swift in Sources */,
 				A00100010000000000000006 /* LocalSpotRepository.swift in Sources */,
+				A0010001000000000000002A /* FavoritesRepository.swift in Sources */,
 				A00100010000000000000007 /* FavoritesStore.swift in Sources */,
 				A00100010000000000000008 /* SpotStore.swift in Sources */,
+				A0010001000000000000002F /* ProfileRepository.swift in Sources */,
 				A0010001000000000000001E /* ProfileStore.swift in Sources */,
+				A0010001000000000000002C /* ReviewRepository.swift in Sources */,
+				A0010001000000000000002D /* LocalReviewRepository.swift in Sources */,
 				A0010001000000000000001F /* ReviewStore.swift in Sources */,
 				A00100010000000000000024 /* AuthStore.swift in Sources */,
 				A00100010000000000000028 /* SupabaseSpotRow.swift in Sources */,
 				A00100010000000000000029 /* SupabaseSpotRepository.swift in Sources */,
+				A0010001000000000000002B /* SupabaseFavoritesRepository.swift in Sources */,
+				A0010001000000000000002E /* SupabaseReviewRepository.swift in Sources */,
+				A00100010000000000000030 /* SupabaseProfileRepository.swift in Sources */,
 				A00100010000000000000009 /* ImageStore.swift in Sources */,
 				A0010001000000000000000A /* LocationManager.swift in Sources */,
 				A0010001000000000000000B /* NavigationService.swift in Sources */,
@@ -480,6 +511,7 @@
 				B00100010000000000000007 /* SupabaseImageStorageTests.swift in Sources */,
 				B00100010000000000000008 /* SupabaseSpotRowTests.swift in Sources */,
 				B00100010000000000000009 /* SupabaseSpotRepositoryTests.swift in Sources */,
+				B0010001000000000000000A /* SupabaseAccountRepositoriesTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

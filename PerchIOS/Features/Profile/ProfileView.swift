@@ -179,7 +179,16 @@ struct ProfileView: View {
             TagFlowLayout(spacing: 8, rowSpacing: 8) {
                 InlineTag(icon: "sparkles", text: trimmed(profile.favoriteMoment, fallback: UserProfile.default.favoriteMoment), tint: PerchTheme.primary)
                 InlineTag(icon: "leaf", text: trimmed(profile.perchStyle, fallback: UserProfile.default.perchStyle), tint: PerchTheme.primarySoft)
-                InlineTag(icon: "person.crop.circle.badge.checkmark", text: "Signed-in profile", tint: PerchTheme.textMuted)
+                InlineTag(icon: "arrow.triangle.2.circlepath", text: "Synced account", tint: PerchTheme.textMuted)
+            }
+
+            if let loadError = profileStore.loadError {
+                Text(loadError)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.orange)
+                    .padding(12)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(PerchTheme.controlFill, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
             }
 
             HStack(spacing: 10) {
@@ -212,7 +221,7 @@ struct ProfileView: View {
                 overviewTile(
                     title: "Average review",
                     value: reviewStore.reviews.isEmpty ? "—" : String(format: "%.1f/5", averageReviewScore),
-                    subtitle: reviewStore.reviews.isEmpty ? "No reviews yet" : "Across your local reviews"
+                    subtitle: reviewStore.reviews.isEmpty ? "No reviews yet" : "Across synced reviews"
                 )
                 overviewTile(
                     title: "Recent activity",
@@ -243,15 +252,15 @@ struct ProfileView: View {
     private var activityOverviewCard: some View {
         VStack(alignment: .leading, spacing: 14) {
             sectionTitle("What lives here")
-            Text("Perch still keeps profile details and activity local for now, while photos and avatars are backed by Supabase Storage.")
+            Text("Perch now syncs profile details, saved places, reviews, and added spots through your Supabase-backed account.")
                 .font(.subheadline)
                 .foregroundStyle(PerchTheme.textMuted)
                 .lineSpacing(3)
 
             VStack(spacing: 10) {
-                infoRow(icon: "person.text.rectangle", title: "Identity", detail: "Name, handle, bio, home area, and perch taste live here and can be edited from the dedicated Edit Profile screen.")
+                infoRow(icon: "person.text.rectangle", title: "Identity", detail: "Name, handle, bio, home area, and perch taste sync from the dedicated Edit Profile screen.")
                 infoRow(icon: "photo", title: "Avatar", detail: "Pick a photo that uploads to Storage, or keep a simple perch icon.")
-                infoRow(icon: "square.and.arrow.down", title: "Activity", detail: "Added spots, saved places, and reviews reflect actual local app data.")
+                infoRow(icon: "square.and.arrow.down", title: "Activity", detail: "Added spots, saved places, and reviews reflect synced account data.")
             }
         }
         .padding(20)
@@ -315,7 +324,7 @@ struct ProfileView: View {
         VStack(alignment: .leading, spacing: 16) {
             sectionTitle("Settings")
 
-            settingsGroup(title: "Review identity & contribution preferences", subtitle: "Control how your local profile appears when you add places and reviews") {
+            settingsGroup(title: "Review identity & contribution preferences", subtitle: "Control how your synced profile appears when you add places and reviews") {
                 infoRow(icon: "person.crop.square", title: "Review display", detail: profile.defaultReviewName.label)
                 infoRow(icon: "envelope", title: "Contact email (optional)", detail: trimmed(profile.email, fallback: "Not set"))
                 Text("This email is never used for sign-in, passwords, or account recovery in the current build.")
@@ -337,16 +346,16 @@ struct ProfileView: View {
                 }
             }
 
-            settingsGroup(title: "Data & privacy", subtitle: "Truthful controls for what stays on this device today") {
-                infoRow(icon: "internaldrive", title: "Profile details stay local", detail: "Your name, handle, bio, saved spots, and reviews are stored on this device today. Custom photos upload to Supabase Storage.")
+            settingsGroup(title: "Data & privacy", subtitle: "Truthful controls for what syncs with your account today") {
+                infoRow(icon: "arrow.triangle.2.circlepath", title: "Account sync active", detail: "Your profile, added spots, saved places, reviews, and custom photos are backed by Supabase.")
                 infoRow(icon: "lock.open", title: "No device lock yet", detail: "Perch does not currently add password or biometric protection on top of local storage.")
-                infoRow(icon: "arrow.triangle.2.circlepath", title: "No sync yet", detail: "There is no cross-device backup or cloud account connected to this profile right now.")
+                infoRow(icon: "person.crop.circle.badge.checkmark", title: "Owner-scoped data", detail: "Synced records are tied to the signed-in Perch account.")
             }
 
-            settingsGroup(title: "About & local-first status", subtitle: "What this profile experience is designed to be in Perch 1.0") {
-                infoRow(icon: "person.text.rectangle", title: "A real profile", detail: "This surface is meant to help you track identity, taste, and activity while backend sync comes online in pieces.")
+            settingsGroup(title: "About & sync status", subtitle: "What this profile experience is designed to be in Perch 1.0") {
+                infoRow(icon: "person.text.rectangle", title: "A real profile", detail: "This surface tracks identity, taste, and activity from the signed-in account.")
                 infoRow(icon: "sparkles", title: "Contribution-first", detail: "Your added spots, saved places, and reviews drive the profile stats and activity sections above.")
-                infoRow(icon: "shippingbox", title: "Future-ready shape", detail: "The structure is organized so Perch can map into real sync and auth later without fake product theater today.")
+                infoRow(icon: "shippingbox", title: "Backend-backed shape", detail: "The structure maps directly into Supabase auth, database rows, and Storage assets.")
             }
         }
         .padding(20)
@@ -388,9 +397,9 @@ struct ProfileView: View {
     private var aboutSection: some View {
         VStack(alignment: .leading, spacing: 14) {
             sectionTitle("About this profile")
-            infoRow(icon: "internaldrive", title: "Stored locally", detail: "Perch saves this profile on the current device using local app storage.")
+            infoRow(icon: "arrow.triangle.2.circlepath", title: "Synced with your account", detail: "Perch saves this profile through the backend when you are signed in.")
             infoRow(icon: "person.crop.circle.badge.checkmark", title: "Built around your real usage", detail: "Profile stats and collections come from the spots you add, save, and review in the app.")
-            infoRow(icon: "arrow.triangle.2.circlepath", title: "Ready for future sync", detail: "The model stays honest today while leaving room for real account systems later.")
+            infoRow(icon: "shippingbox", title: "Backend-backed", detail: "Profile, favorite, review, spot, and photo data now use the Supabase implementation.")
         }
         .padding(20)
         .perchGlassCard()

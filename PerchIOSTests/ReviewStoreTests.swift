@@ -4,16 +4,16 @@ import XCTest
 @MainActor
 final class ReviewStoreTests: XCTestCase {
     private var store: ReviewStore!
-    private var defaults: UserDefaults!
+    private var repository: StubReviewRepository!
 
     override func setUp() async throws {
-        defaults = UserDefaults(suiteName: "com.perch.reviewtests.\(UUID().uuidString)")!
-        store = ReviewStore(defaults: defaults)
+        repository = StubReviewRepository()
+        store = ReviewStore(repository: repository)
     }
 
     override func tearDown() async throws {
         store = nil
-        defaults = nil
+        repository = nil
     }
 
     // MARK: - Helpers
@@ -201,21 +201,99 @@ final class ReviewStoreTests: XCTestCase {
 
     // MARK: - persistence
 
-    func testReviewsPersistAcrossStoreInstances() {
+    func testReviewsPersistAcrossStoreInstances() async {
+        let defaults = UserDefaults(suiteName: "com.perch.reviewtests.\(UUID().uuidString)")!
+        let repository = LocalReviewRepository(defaults: defaults)
         let spotID = UUID()
+        store = ReviewStore(repository: repository)
         addReview(spotID: spotID)
+        await settleAsyncStoreWork()
 
-        let store2 = ReviewStore(defaults: defaults)
+        let store2 = ReviewStore(repository: LocalReviewRepository(defaults: defaults))
+        await store2.load()
         XCTAssertEqual(store2.reviews(for: spotID).count, 1)
     }
 
-    func testDeletePersistsAcrossStoreInstances() {
+    func testDeletePersistsAcrossStoreInstances() async {
+        let defaults = UserDefaults(suiteName: "com.perch.reviewtests.\(UUID().uuidString)")!
+        let repository = LocalReviewRepository(defaults: defaults)
         let spotID = UUID()
+        store = ReviewStore(repository: repository)
         addReview(spotID: spotID)
+        await settleAsyncStoreWork()
         let reviewID = store.reviews(for: spotID)[0].id
         store.deleteReview(id: reviewID)
+        await settleAsyncStoreWork()
 
-        let store2 = ReviewStore(defaults: defaults)
+        let store2 = ReviewStore(repository: LocalReviewRepository(defaults: defaults))
+        await store2.load()
         XCTAssertTrue(store2.reviews(for: spotID).isEmpty)
     }
+
+    func testLoadUsesRepositoryReviews() async {
+        let review = makeReview(spotID: UUID())
+        repository.loadedReviews = [review]
+
+        await store.load()
+
+        XCTAssertEqual(store.reviews, [review])
+    }
+
+    func testInsertFailureRollsBackReview() async {
+        repository.insertError = TestRepositoryError.failed
+
+        addReview(spotID: UUID())
+        await settleAsyncStoreWork()
+
+        XCTAssertTrue(store.reviews.isEmpty)
+        XCTAssertEqual(store.loadError, TestRepositoryError.failed.localizedDescription)
+    }
+}
+
+final class StubReviewRepository: ReviewRepository {
+    var loadedReviews: [SpotReview] = []
+    var loadError: Error?
+    var insertError: Error?
+    var deleteError: Error?
+    var insertedReviews: [SpotReview] = []
+    var deletedIDs: [UUID] = []
+
+    func loadReviews() async throws -> [SpotReview] {
+        if let loadError { throw loadError }
+        return loadedReviews
+    }
+
+    func insert(_ review: SpotReview) async throws {
+        if let insertError { throw insertError }
+        insertedReviews.append(review)
+        loadedReviews.append(review)
+    }
+
+    func delete(id: UUID) async throws {
+        if let deleteError { throw deleteError }
+        deletedIDs.append(id)
+        loadedReviews.removeAll { $0.id == id }
+    }
+}
+
+func makeReview(
+    id: UUID = UUID(),
+    spotID: UUID = UUID(),
+    authorName: String = "Tester"
+) -> SpotReview {
+    SpotReview(
+        id: id,
+        spotID: spotID,
+        authorName: authorName,
+        title: "Great spot",
+        note: "Nice place",
+        settleInEase: 4,
+        stayComfort: 4,
+        viewPayoff: 4,
+        calmFactor: 4,
+        wouldReturn: true,
+        bestFor: [.soloReset],
+        createdAt: .now,
+        updatedAt: .now
+    )
 }
